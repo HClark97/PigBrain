@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Mar  7 10:17:19 2022
 
-@author: mbj
-"""
 
+import tdt
+
+data = tdt.read_block('Z:\Data\Pig Work\Suzan\Fall 2021\Chronic cortical data\Suzan_Chronic2-211102\Subject1-211102-112530')
+
+test = data.streams.Wav1.fs
