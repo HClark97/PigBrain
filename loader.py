@@ -9,11 +9,12 @@ import scipy.fftpack
 from scipy.fft import fft, fftfreq
 import matplotlib.pyplot as plt
 
+
 f,pxx = scipy.signal.periodogram(data[1], fs=Fs, window='boxcar', nfft=None, detrend='constant', return_onesided=True, scaling='density', axis=- 1)
+
 pxx = 10*np.log10(pxx)
 plt.plot(f,pxx)
 plt.grid()
 plt.xlim(0,1000)
 plt.xlabel("Frequency (Hz)")
 plt.ylabel("Amplitude (dB/Hz)")
-
