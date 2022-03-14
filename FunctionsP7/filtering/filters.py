@@ -95,7 +95,7 @@ def filt_filt_nocth_harmonic(data, crit_freq, fs):
     filtdata = data
     
     for i in range (len(crit_freq)):
-        Q = crit_freq[i]/(crit_freq[i]/4)
+        Q = crit_freq[i]/2
         b_coef, a_coef = signal.iirnotch(crit_freq[i], Q, fs) #Design filter
         filtdata = signal.filtfilt(b_coef, a_coef, filtdata) #apply filter
     return filtdata
