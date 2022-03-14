@@ -1,3 +1,8 @@
+<<<<<<< Updated upstream
+=======
+# -*- coding: utf-8 -*-
+
+>>>>>>> Stashed changes
 import tdt
 
 data = tdt.read_block('Z:\Data\Pig Work\Suzan\Spring 2021\Student data\Subject9-210426-124955')
@@ -9,6 +14,7 @@ import scipy.fftpack
 from scipy.fft import fft, fftfreq
 import matplotlib.pyplot as plt
 
+<<<<<<< Updated upstream
 f,pxx = scipy.signal.periodogram(data(1), fs=Fs, window='boxcar', nfft=None, detrend='constant', return_onesided=True, scaling='density', axis=- 1)
 pxx = 10*np.log10(pxx)
 plt.plot(f,pxx)
@@ -16,3 +22,6 @@ plt.grid()
 plt.xlim(0,100)
 plt.xlabel("Frequency (Hz)")
 plt.ylabel("Amplitude (dB/Hz)")
+=======
+test = data.streams.Wav1.fs
+>>>>>>> Stashed changes
