@@ -67,4 +67,36 @@ def filt_filt_nocth(data, crit_freq, Q, fs):
     b_coef, a_coef = signal.iirnotch(crit_freq, Q, fs) #Design filter
     return signal.filtfilt(b_coef, a_coef, data) #apply filter
 
+def filt_filt_nocth_harmonic(data, crit_freq, fs):
+    """
+    Filter a data array using a notch filter with the specified parameters.
+
+    Parameters
+    ----------
+    data : array
+        Data array to be filtered.
+    crit_freq : float array
+        Critical frequency of the notch filter in Hz.
+    Q : float
+        Quality factor of the notch filter, used to calculate the bandwidth of
+        the filter. See scipy.iirnotch documentation: Q = crit_freq / bw.
+    fs : float
+        The sampling freqiency in Hz.
+
+    Returns
+    -------
+    array
+        The filtered data array.
+    """
+    
+    #Design notch filter 
+    #f0 = 50.0  # Frequency to be removed from signal (Hz)
+    #Q = 10.0  # Quality factor
+    filtdata = data
+    
+    for i in range (len(crit_freq)):
+        Q = crit_freq[i]/(crit_freq[i]/4)
+        b_coef, a_coef = signal.iirnotch(crit_freq[i], Q, fs) #Design filter
+        filtdata = signal.filtfilt(b_coef, a_coef, filtdata) #apply filter
+    return filtdata
 
