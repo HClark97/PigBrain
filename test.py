@@ -16,14 +16,10 @@ test = data.epocs
 #print(test)
 
 test1 = data.streams.RSn1
-#print(test1)
+print(test1)
 
 fs = data.streams.RSn1.fs
-filtered_channel = np.array(data.streams.RSn1.filtered_chan)
-filtered_data = np.array(data.streams.RSn1.filtered_data)
+#data = data.streams.RSn1.data
 
-#print(data.info)
 
-snips = data.snips
-print(snips)
 
