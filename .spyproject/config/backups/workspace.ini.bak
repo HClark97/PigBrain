@@ -4,11 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-<<<<<<< Updated upstream
-recent_files = ['loader.py']
-=======
 recent_files = ['test.py', 'loader.py']
->>>>>>> Stashed changes
 
 [main]
 version = 0.2.0

@@ -29,10 +29,10 @@ def psd (data,Fs):
     return(f,pxx)
 
 
-def psd_plot(data,Fs):
+def psd_plot(data,Fs,xlim = None):
     """
     
-
+    
     Parameters
     ----------
     data : Array of ints
@@ -45,11 +45,14 @@ def psd_plot(data,Fs):
     plot
 
     """
+    if xlim == None:
+        xlim = 100
+    
     f,pxx = scipy.signal.periodogram(data, fs=Fs, window='boxcar', nfft=None, detrend='constant', return_onesided=True, scaling='density', axis=- 1)
     pxx = 10*np.log10(pxx)
     plt.plot(f,pxx)
     plt.grid()
-    plt.xlim(0,100)
+    plt.xlim(0,xlim)
     plt.xlabel("Frequency (Hz)")
     plt.ylabel("Amplitude (dB/Hz)")
     
