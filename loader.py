@@ -9,7 +9,7 @@ import scipy.fftpack
 from scipy.fft import fft, fftfreq
 import matplotlib.pyplot as plt
 
-f,pxx = scipy.signal.periodogram(data, fs=Fs, window='boxcar', nfft=None, detrend='constant', return_onesided=True, scaling='density', axis=- 1)
+f,pxx = scipy.signal.periodogram(data(1), fs=Fs, window='boxcar', nfft=None, detrend='constant', return_onesided=True, scaling='density', axis=- 1)
 pxx = 10*np.log10(pxx)
 plt.plot(f,pxx)
 plt.grid()
