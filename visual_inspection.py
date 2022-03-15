@@ -10,6 +10,7 @@ import FunctionsP7.FFT.Power_density as pdf
 import FunctionsP7.filtering.filters as butfilt
 import FunctionsP7.filtering.plot_data as pd
 from numpy.fft import rfft, rfftfreq
+import 
 
 fontsize_title = 25
 fontsize_labels = 15
@@ -20,6 +21,7 @@ data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subjec
 #data = tdt.read_block(r'/Users/amaliekoch/Desktop/Subject1-210913-131914')
 
 exp = 1
+channel = 1
 
 fs = data.streams.RSn1.fs
 data = data.streams.RSn1.data
@@ -33,6 +35,7 @@ t = np.arange(0,len(data[0,:]),1)/fs #time vector
 #Plot PSD af raw data 
 # pdf.psd_plot(data[1],fs,300)
 
+p.plot_data_fft_log(data, t, fs, 'Raw data in time and frequency domain. ', channel, exp)
 
 
 # #Harmonic notch filtering
@@ -42,7 +45,6 @@ notch_data = butfilt.filt_filt_nocth_harmonic(data,harmonics, fs)
 # # HIGHPASS FILTERING 
 high_notch_data = butfilt.filt_filt_but(notch_data, 'high', 5, 1, fs)
 low_notch_data = butfilt.filt_filt_but(high_notch_data, 'low', 5, 250, fs)
-
 
 
 

@@ -50,3 +50,7 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     plt.margins(0, .05)
     plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3)
 
+<<<<<<< Updated upstream:Preprocessing/plot.py
+=======
+
+>>>>>>> Stashed changes:FunctionsP7/plot.py
