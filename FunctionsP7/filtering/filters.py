@@ -8,6 +8,8 @@ Created on Fri Oct  1 13:38:48 2021
 
 from scipy import signal
 
+import numpy as np
+
 def filt_filt_but(dataArray, filtType, order, critFreq, fs):
     """
     Apply a digital Butterworth filter to the data array using sosfiltfilt, with the given order and critical frquency.
@@ -38,6 +40,40 @@ def filt_filt_but(dataArray, filtType, order, critFreq, fs):
     
     # Apply the filter to the data array
     return signal.sosfiltfilt(sos, dataArray)
+
+
+def filt_filt_but_harmonic(dataArray, filtType, order, critFreq, fs):
+    """
+    Apply a digital Butterworth filter to the data array using sosfiltfilt, with the given order and critical frquency.
+
+    Parameters
+    ----------
+    dataArray : TYPE
+        The data array to which the filter should be applied.
+    filtType : string
+        The filter type, as defined by scipy (‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’)
+    order : integer
+        The filter order.
+    critFreq : float
+        The critical frequency in Hz at which the filter attinuates the signal with -3dB.
+    fs : float
+        The sampling freqiency in Hz.
+        
+    Returns
+    -------
+    numpy array
+        The filtered data array.
+    """
+    # Convert the critical frequency in Hz to Wn (a factor of fs)
+    filtdata = dataArray
+    wn = np.zeros(2)    
+    for i in range (len(critFreq)):
+        wn[0] = ((critFreq[i])-1) / (fs / 2)
+        wn[1] = ((critFreq[i])+1) / (fs / 2)
+        # Design the filter
+        sos = signal.butter(order, wn, btype=filtType, output='sos')
+        filtdata = signal.sosfiltfilt(sos, filtdata)
+    return filtdata
 
 def filt_filt_nocth(data, crit_freq, Q, fs):
     """
