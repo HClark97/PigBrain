@@ -17,13 +17,13 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     #PLOT AF RAW DATA I TID OG FREKVENS: 
     data = data*1000 #For at få amplituden i µV
     fig = plt.figure(figsize=(25, 20))
-    plt.suptitle((title + ' - Channel: '+ str(channel) + ' Exp: ' + str(exp)),fontsize =25,fontweight='bold')
+    plt.suptitle((title + ' - Channel: '+ str(channel+1) + ' Exp: ' + str(exp)),fontsize =25,fontweight='bold')
     plt.rc('xtick', labelsize=fontsize_labels)
     plt.rc('ytick', labelsize=fontsize_labels)
     plt.subplot(311)
     plt.plot(t,data[channel,:])
-    plt.xlim([4,5])  #only first part of data 
-    plt.ylim([15,20])
+    #plt.xlim([4,5])  #only first part of data 
+    plt.ylim([-0.5,0.5])
     plt.grid(True)
     plt.title("Time domain",fontsize = fontsize_labels,fontweight='bold')
     plt.ylabel('Amplitude [µV]',fontsize = fontsize_labels,fontweight='bold')
@@ -50,7 +50,4 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     plt.margins(0, .05)
     plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3)
 
-<<<<<<< Updated upstream:Preprocessing/plot.py
-=======
 
->>>>>>> Stashed changes:FunctionsP7/plot.py
