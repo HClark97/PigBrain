@@ -24,15 +24,13 @@ pdf.psd_plot(data[2],fs,400)
 harmonics = np.array([50,100,150,200,250,300,350])
 notch_data = np.zeros([32,2])
 notch_data = butfilt.filt_filt_nocth_harmonic(data[0:1],harmonics, fs)
-
-#Notch filter on 50 hz again.
 fig3 = plt.figure()
 pdf.psd_plot(notch_data[0], fs,400)
 
-# second try
-stop_data = butfilt.filt_filt_but_harmonic(data[0], 'stop', 2, harmonics, fs)
-fig = plt.figure()
-pdf.psd_plot(stop_data, fs,300)
+# If notch filter is to much, use the stopband filter below
+# stop_data = butfilt.filt_filt_but_harmonic(data[0], 'stop', 1, harmonics, fs)
+# fig = plt.figure()
+# pdf.psd_plot(stop_data, fs,300)
 
 #thrid try
 #stop_data = butfilt.butter_bandstop_filter(data[0], 49, 51, fs, 5)
