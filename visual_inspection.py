@@ -24,19 +24,19 @@ fs = data.streams.RSn1.fs
 data = data.streams.RSn1.data
 
 #data_test = data[:,50000:120000] #kun de første 12000 af data for hver kanal
-t = 1/fs 
+t = np.arange(0,len(data[1]),1/fs) #time vector
 
 #Plot PSD af raw data 
-pdf.psd_plot(data[24],fs,300)
+pdf.psd_plot(data[0],fs,300)
 
 #PLOT AF RAW DATA I TID OG FREKVENS: 
 fig = plt.figure(figsize=(25, 20))
-plt.suptitle(('Raw data in time and frequency domain' + 'channel: '+ ),fontsize =25,fontweight='bold')
+plt.suptitle(('Raw data in time and frequency domain.' + 'Channel: '+ '1'),fontsize =25,fontweight='bold')
 plt.rc('xtick', labelsize=fontsize_labels)
 plt.rc('ytick', labelsize=fontsize_labels)
 plt.subplot(311)
-plt.plot(data[0,:]) #Alt data 
-#plt.plot(data[0,0:12000]) #only first part of data 
+plt.plot(t,data[0,:]) #Alt data 
+#plt.plot(t,data[0,0:12000]) #only first part of data 
 #plt.xlim([])
 #plt.ylim([-0.1,0.1])
 plt.grid(True)
