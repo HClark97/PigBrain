@@ -15,6 +15,7 @@ fontsize_labels = 15
 
 def plot_data_fft_log (data,t,fs,title, channel,exp):
     #PLOT AF RAW DATA I TID OG FREKVENS: 
+    data = data*1000 #For at få amplituden i µV
     fig = plt.figure(figsize=(25, 20))
     plt.suptitle((title + ' - Channel: '+ str(channel) + ' Exp: ' + str(exp)),fontsize =25,fontweight='bold')
     plt.rc('xtick', labelsize=fontsize_labels)
@@ -48,23 +49,4 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     plt.xlim([-5,350])
     plt.margins(0, .05)
     plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3)
-
-
-
-# t = np.arange(0,len(data[0,:]),1)/fs #time vector
-
-# #Plot PSD af raw data 
-# # pdf.psd_plot(data[1],fs,300)
-# channel = 1
-
-# p.plot_data_fft_log(data, t, fs, 'Raw data in time and frequency domain. ', channel, exp)
-
-# # Harmonic notch filtering
-# #harmonics = np.array([50,100,150,200,250,300,350])
-# notch_data = np.zeros(np.shape(data))
-# notch_data = butfilt.filt_filt_nocth(data, 50, 25, fs)
-# #notch_data = butfilt.filt_filt_nocth(notch_data,50, 50/4, fs) #We choose Q-factor of 50/4 to get BW from 48 to 52 Hz
-
-# p.plot_data_fft_log(notch_data, t, fs, 'Notch filtered data in time and frequency domain. ', channel, exp)
-
 
