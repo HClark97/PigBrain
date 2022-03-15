@@ -25,13 +25,10 @@ exp = 1
 fs = data.streams.RSn1.fs
 data = data.streams.RSn1.data
 
-<<<<<<< HEAD
 #data_test = data[:,50000:120000] #kun de første 12000 af data for hver kanal
-=======
 data = data*1000; 
 
 #data = data[:,50000:120000] #kun de første 12000 af data for hver kanal
->>>>>>> f85adccbba3abed4dda4d4c31975b968dba1899a
 t = np.arange(0,len(data[0,:]),1)/fs #time vector
 
 #Plot PSD af raw data 
