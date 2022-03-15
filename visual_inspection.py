@@ -16,15 +16,15 @@ fontsize_labels = 15
 
 #load data
 #data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210426-124955')
-#data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210426-124955')
-data = tdt.read_block(r'/Users/amaliekoch/Desktop/Subject1-210913-131914')
+data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject1-210913-131914')
+#data = tdt.read_block(r'/Users/amaliekoch/Desktop/Subject1-210913-131914')
 
 #notchdata = tdt.digitalfilter(data,'RSn1',np.array([10,100]),'NOTCH',np.array([50,100,150,200,250,300,350]))
 fs = data.streams.RSn1.fs
 data = data.streams.RSn1.data
 
 #data_test = data[:,50000:120000] #kun de første 12000 af data for hver kanal
-t = np.arange(0,len(data[1]),1/fs) #time vector
+t = np.arange(0,len(data[0,:]),1)/fs #time vector
 
 #Plot PSD af raw data 
 pdf.psd_plot(data[0],fs,300)
