@@ -9,7 +9,7 @@ import FunctionsP7.filtering.filters as butfilt
 
 
 #load data
-data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject1-210914-103420')
+data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210526-093759')
 
 #notchdata = tdt.digitalfilter(data,'RSn1',np.array([10,100]),'NOTCH',np.array([50,100,150,200,250,300,350]))
 fs = data.streams.RSn1.fs
