@@ -19,50 +19,59 @@ fontsize_labels = 15
 data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject1-210913-131914')
 #data = tdt.read_block(r'/Users/amaliekoch/Desktop/Subject1-210913-131914')
 
+exp = 1
+
 #notchdata = tdt.digitalfilter(data,'RSn1',np.array([10,100]),'NOTCH',np.array([50,100,150,200,250,300,350]))
 fs = data.streams.RSn1.fs
 data = data.streams.RSn1.data
 
+<<<<<<< HEAD
 #data_test = data[:,50000:120000] #kun de første 12000 af data for hver kanal
+=======
+data = data*1000; 
+
+#data = data[:,50000:120000] #kun de første 12000 af data for hver kanal
+>>>>>>> f85adccbba3abed4dda4d4c31975b968dba1899a
 t = np.arange(0,len(data[0,:]),1)/fs #time vector
 
 #Plot PSD af raw data 
-pdf.psd_plot(data[0],fs,300)
+# pdf.psd_plot(data[1],fs,300)
 
-#PLOT AF RAW DATA I TID OG FREKVENS: 
-fig = plt.figure(figsize=(25, 20))
-plt.suptitle(('Raw data in time and frequency domain.' + 'Channel: '+ '1'),fontsize =25,fontweight='bold')
-plt.rc('xtick', labelsize=fontsize_labels)
-plt.rc('ytick', labelsize=fontsize_labels)
-plt.subplot(311)
-plt.plot(t,data[0,:]) #Alt data 
-#plt.plot(t,data[0,0:12000]) #only first part of data 
-#plt.xlim([])
-#plt.ylim([-0.1,0.1])
-plt.grid(True)
-plt.title("Time domain",fontsize = fontsize_labels,fontweight='bold')
-plt.ylabel('Amplitude',fontsize = fontsize_labels,fontweight='bold')
-plt.xlabel('Time [samples]',fontsize = fontsize_labels,fontweight='bold')
-plt.subplot(312)
-raw_data_fft = abs(rfft(data[0]))
-freqs = rfftfreq(data[0].size, 1 / fs)
-plt.plot(freqs, abs(raw_data_fft))
-plt.title("Frequency domain (FFT)",fontsize = fontsize_labels,fontweight='bold')
-plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
-#plt.ylim(-5,300)
-plt.xlim([-5,300])
-plt.subplot(313)
-plt.semilogy(freqs, abs(raw_data_fft))
-plt.grid(True)
-plt.grid(b = True, which = 'minor', color = 'k', linestyle = '-', alpha = 0.2)
-plt.minorticks_on()
-plt.title("Logarithmic frequency domain",fontsize = fontsize_labels,fontweight='bold')
-plt.ylabel('Power [µV^2]',fontsize = fontsize_labels,fontweight='bold')
-plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
-#plt.ylim(-5,300)
-plt.xlim([-5,300])
-plt.margins(0, .05)
-plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3)
+
+# #PLOT AF RAW DATA I TID OG FREKVENS: 
+# fig = plt.figure(figsize=(25, 20))
+# plt.suptitle(('Raw data in time and frequency domain.' + 'Channel: '+ '1' + ' Exp 1'),fontsize =25,fontweight='bold')
+# plt.rc('xtick', labelsize=fontsize_labels)
+# plt.rc('ytick', labelsize=fontsize_labels)
+# plt.subplot(311)
+# plt.plot(t,data[0,:])
+# plt.xlim([0,2])  #only first part of data 
+# plt.ylim([-500,500])
+# plt.grid(True)
+# plt.title("Time domain",fontsize = fontsize_labels,fontweight='bold')
+# plt.ylabel('Amplitude [µV]',fontsize = fontsize_labels,fontweight='bold')
+# plt.xlabel('Time [s]',fontsize = fontsize_labels,fontweight='bold')
+# plt.subplot(312)
+# raw_data_fft = abs(rfft(data[0]))
+# freqs = rfftfreq(data[0].size, 1 / fs)
+# plt.plot(freqs, abs(raw_data_fft))
+# plt.title("Frequency domain (FFT)",fontsize = fontsize_labels,fontweight='bold')
+# plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
+# plt.ylabel('Amplitude',fontsize = fontsize_labels,fontweight='bold')
+# #plt.ylim(-5,300)
+# plt.xlim([-5,300])
+# plt.subplot(313)
+# plt.semilogy(freqs, abs(raw_data_fft**2))
+# plt.grid(True)
+# plt.grid(b = True, which = 'minor', color = 'k', linestyle = '-', alpha = 0.2)
+# plt.minorticks_on()
+# plt.title("Logarithmic frequency domain",fontsize = fontsize_labels,fontweight='bold')
+# plt.ylabel('Power [µV^2]',fontsize = fontsize_labels,fontweight='bold')
+# plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
+# #plt.ylim(-5,300)
+# plt.xlim([-5,300])
+# plt.margins(0, .05)
+# plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3)
 
 
 # #Harmonic notch filtering
@@ -106,5 +115,44 @@ plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=
 # plt.xlim([-10,200])
 # plt.ylim([0,600])
 
+
+for i in range (len(data)):
+    #PLOT AF RAW DATA I TID OG FREKVENS: 
+    fig = plt.figure(figsize=(25, 20))
+    plt.suptitle(('Raw data in time and frequency domain. ' + 'Channel: '+ str(i+1) + ' Exp ' + str(exp)),fontsize =25,fontweight='bold')
+    plt.rc('xtick', labelsize=fontsize_labels)
+    plt.rc('ytick', labelsize=fontsize_labels)
+    plt.subplot(311)
+    plt.plot(t,data[i,:])
+    #plt.xlim([0,2])  #only first part of data 
+    #plt.ylim([-500,500])
+    plt.grid(True)
+    plt.title("Time domain",fontsize = fontsize_labels,fontweight='bold')
+    plt.ylabel('Amplitude [µV]',fontsize = fontsize_labels,fontweight='bold')
+    plt.xlabel('Time [s]',fontsize = fontsize_labels,fontweight='bold')
+    plt.subplot(312)
+    raw_data_fft = abs(rfft(data[i]))
+    freqs = rfftfreq(data[i].size, 1 / fs)
+    plt.plot(freqs, abs(raw_data_fft))
+    #plt.grid(True)
+    plt.title("Frequency domain (FFT)",fontsize = fontsize_labels,fontweight='bold')
+    plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
+    plt.ylabel('Amplitude',fontsize = fontsize_labels,fontweight='bold')
+    plt.ylim(-1,300)
+    #plt.xlim([-5,300])
+    plt.subplot(313)
+    plt.semilogy(freqs, abs(raw_data_fft**2))
+    plt.grid(True)
+    plt.grid(b = True, which = 'minor', color = 'k', linestyle = '-', alpha = 0.2)
+    plt.minorticks_on()
+    plt.title("Logarithmic frequency domain",fontsize = fontsize_labels,fontweight='bold')
+    plt.ylabel('Power [µV^2]',fontsize = fontsize_labels,fontweight='bold')
+    plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
+    #plt.ylim(-5,300)
+    plt.xlim([-2,300])
+    plt.margins(0, .05)
+    plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3) 
+    
+    
 
 
