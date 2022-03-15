@@ -25,7 +25,6 @@ fs = data.streams.RSn1.fs
 data = data.streams.RSn1.data
 
 #data_test = data[:,50000:120000] #kun de første 12000 af data for hver kanal
-
 data = data*1000; 
 
 #data = data[:,50000:120000] #kun de første 12000 af data for hver kanal
