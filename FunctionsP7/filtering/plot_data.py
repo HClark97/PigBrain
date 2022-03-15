@@ -43,7 +43,7 @@ def plot_data_and_fft (data,t,fs,title,filename,x_range_fft = None,y_range_fft =
 
     """
         
-    data= data*1000
+    #data= data*1000
     
     if y_range_data is None:
         y_range_data=(min(data),max(data))
