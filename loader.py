@@ -1,8 +1,7 @@
 import scipy.io
-import h5py as h5py
-import numpy as np
+import plyer as pl
 
-def load_mat_file(path):
+def load_mat_file():
     """
     Parameters
     ----------
@@ -22,13 +21,10 @@ def load_mat_file(path):
     dict['block'][i]['channel'][i]['ERPs'][i]
     
     """
-    f = scipy.io.loadmat(path,simplify_cells=True)
-    f.pop('__globals__')
-    f.pop('__header__')
-    f.pop('__version__')
-    data = np.array(list(f.items()))
-    Non=data[0,1]
-    Nox=data[1,1]
+    path=pl.filechooser.open_file()
+    f = scipy.io.loadmat(path[0],simplify_cells=True)
+    Non=f['NonnoxERP']
+    Nox=f['NoxERP']
     
     return Non,Nox
     
