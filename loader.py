@@ -1,6 +1,6 @@
 import scipy.io
 import plyer as pl
-
+import ctypes    
 def load_mat_file():
     """
     Parameters
@@ -22,14 +22,17 @@ def load_mat_file():
     
     """
     path=pl.filechooser.open_file()
-    f = scipy.io.loadmat(path[0],simplify_cells=True)
-    Non=f['NonnoxERP']
-    Nox=f['NoxERP']
     
-    return Non,Nox
+    if len(path):
+            f = scipy.io.loadmat(path[0],simplify_cells=True)
+            Non=f['NonnoxERP']
+            Nox=f['NoxERP']
+            return Non,Nox
+            
+    else:
+            ctypes.windll.user32.MessageBoxW(0, "Please select correct file path", "Path not found")
     
-
-
+        
 
 
 
