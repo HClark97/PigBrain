@@ -26,6 +26,8 @@ for nox in range(np.shape(files))
     for sets in range(np.shape(nox)
         for channel in range(np.shape(sets[0]))
             for epoch in range(np.shape(channel[0]))
+            
+            
 ## Baseline correction fra P7
 # baseline = np.mean(data[exp,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
 # # Correct the baseline
