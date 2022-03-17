@@ -22,19 +22,12 @@ def load_mat_file():
     
     """
     
-    
     if str(pl.utils.platform) == 'macosx':
-        path='/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1' 
+        path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'])
     else:
         path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
     
     if len(path):
-        if str(pl.utils.platform) == 'macosx':
-            f = scipy.io.loadmat(path,simplify_cells=True)
-            Non=f['NonnoxERP']
-            Nox=f['NoxERP']
-            return Non,Nox
-        else: 
             f = scipy.io.loadmat(path[0],simplify_cells=True)
             Non=f['NonnoxERP']
             Nox=f['NoxERP']
