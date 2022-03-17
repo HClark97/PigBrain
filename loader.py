@@ -13,7 +13,7 @@ def load_mat_file():
     Non : dict
         Contains non-noxious data
     Nox : dict
-        Contains non-noxious data
+        Contains noxious data
     
     Help
     -------
@@ -21,8 +21,10 @@ def load_mat_file():
     dict['block'][i]['channel'][i]['ERPs'][i]
     
     """
-    path=pl.filechooser.open_file()
-    #path=pl.facades.filechooser.open_file()
+    if str(pl.utils.platform) == 'macosx':
+        path=r'/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'
+    else:
+        path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
     
     if len(path):
             f = scipy.io.loadmat(path[0],simplify_cells=True)
@@ -30,7 +32,7 @@ def load_mat_file():
             Nox=f['NoxERP']
             return Non,Nox
             
-    else:
+    elif str(pl.utils.platform) == 'win':
             ctypes.windll.user32.MessageBoxW(0, "Please select correct file path", "Path not found")
     
         
