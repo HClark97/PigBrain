@@ -22,7 +22,7 @@ pdf.psd_plot(data[2],fs,400)
 
 for group in range(np.size([Non,Nox])):
     for sets in range(np.shape(Nox['block'])):
-        for channel in range(np.shape(Nox['block'][0]['channel'])):
+        for channel in range(np.shape(data['NonnoxERP']['block'][0]['channel'])):
             for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
                 ## Baseline correction fra P7
                 # baseline = np.mean(data[group,sets,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
