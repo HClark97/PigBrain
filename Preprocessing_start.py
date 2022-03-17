@@ -27,6 +27,7 @@ notch_data = butfilt.filt_filt_nocth_harmonic(data[0:1],harmonics, fs)
 fig3 = plt.figure()
 pdf.psd_plot(notch_data[0], fs,400)
 
+
 # If notch filter is to much, use the stopband filter below
 # stop_data = butfilt.filt_filt_but_harmonic(data[0], 'stop', 1, harmonics, fs)
 # fig = plt.figure()
