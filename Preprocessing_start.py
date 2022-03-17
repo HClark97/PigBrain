@@ -19,7 +19,10 @@ data = data.streams.RSn1.data
 fig2 = plt.figure()
 pdf.psd_plot(data[2],fs,400)
 
+#REMOVAL OF NOISY CHANNELS 
 
+
+#FILTERING OF ALL EPOCHS 
 for nox in range(np.size([Non,Nox])):
     for sets in range(np.shape(Nox['block'])):
         for channel in range(np.shape(Nox['block'][0]['channel'])):
@@ -28,8 +31,11 @@ for nox in range(np.size([Non,Nox])):
                 # baseline = np.mean(data[nox,sets,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
                 # # Correct the baseline
                 # data[nox,sets,channel,epoch] = data[exp,channel,epoch] - baseline
-                ## filter the data
+                
+                ## Notch filter the data (+harmonics)
                 # harmonics = np.array([50,100,150,200,250,300,350])
+                
+                ## Bandpas filter the data 
                 # data[nox,sets,channel,epoch] = f.filt_filt_nocth_harmonic(data[exp,channel,epoch],harmonics, fs)
                 # data[nox,sets,channel,epoch] = f.filt_filt_but(data[exp,channel,epoch], 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
 
