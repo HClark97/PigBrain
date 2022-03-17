@@ -13,7 +13,7 @@ def load_mat_file():
     Non : dict
         Contains non-noxious data
     Nox : dict
-        Contains non-noxious data
+        Contains noxious data
     
     Help
     -------
