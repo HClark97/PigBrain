@@ -22,7 +22,7 @@ def load_mat_file():
     
     """
     if str(pl.utils.platform) == 'macosx':
-        path='x'
+        path=r'/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'
     else:
         path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
     
