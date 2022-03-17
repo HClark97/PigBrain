@@ -24,7 +24,7 @@ exp = 1
 channel = 1
 
 fs = data.streams.RSn1.fs # sample frequency 
-data = data.streams.RSn1.data[10:21] #data 
+data = data.streams.RSn1.data[31:32] #data 
 t = np.arange(0,len(data[0,:]),1)/fs #time vector
 
 #PLOT RAW DATA 
@@ -41,7 +41,7 @@ notch_data = f.filt_filt_nocth_harmonic(data,harmonics, fs)
 band_notch_data = f.filt_filt_but(notch_data, 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
 
 
-for i in range (10):
+for i in range (1):
     p.plot_data_fft_log(band_notch_data, t, fs, 'Bandpass and notch filtered data in time and frequency domain. ', i, exp)
 
 
