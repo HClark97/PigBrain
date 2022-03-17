@@ -19,6 +19,7 @@ data = data.streams.RSn1.data
 fig2 = plt.figure()
 pdf.psd_plot(data[2],fs,400)
 
+#REMOVAL OF NOISY CHANNELS 
 
 for group in range(np.size([Non,Nox])):
     for sets in range(np.shape(Nox['block'])):
