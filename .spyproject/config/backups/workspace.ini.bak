@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['loader.py', 'draft.py', 'visual_inspection.py']
+recent_files = ['Preprocessing_start.py', 'FunctionsP7\\filtering\\filters.py', 'visual_inspection.py', 'FunctionsP7\\filtering\\plot_data.py']
 
 [main]
 version = 0.2.0
