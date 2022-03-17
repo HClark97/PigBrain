@@ -21,23 +21,18 @@ pdf.psd_plot(data[2],fs,400)
 
 #REMOVAL OF NOISY CHANNELS 
 
-
-#FILTERING OF ALL EPOCHS 
-for nox in range(np.size([Non,Nox])):
+for group in range(np.size([Non,Nox])):
     for sets in range(np.shape(Nox['block'])):
         for channel in range(np.shape(Nox['block'][0]['channel'])):
             for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
                 ## Baseline correction fra P7
-                # baseline = np.mean(data[nox,sets,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
+                # baseline = np.mean(data[group,sets,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
                 # # Correct the baseline
-                # data[nox,sets,channel,epoch] = data[exp,channel,epoch] - baseline
-                
-                ## Notch filter the data (+harmonics)
+                # data[group,sets,channel,epoch] = data[exp,channel,epoch] - baseline
+                ## filter the data
                 # harmonics = np.array([50,100,150,200,250,300,350])
-                
-                ## Bandpas filter the data 
-                # data[nox,sets,channel,epoch] = f.filt_filt_nocth_harmonic(data[exp,channel,epoch],harmonics, fs)
-                # data[nox,sets,channel,epoch] = f.filt_filt_but(data[exp,channel,epoch], 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
+                # data[group,sets,channel,epoch] = f.filt_filt_nocth_harmonic(data[group,sets,channel,epoch],harmonics, fs)
+                # data[group,sets,channel,epoch] = f.filt_filt_but(data[group,sets,channel,epoch], 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
 
 
 
