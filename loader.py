@@ -21,8 +21,10 @@ def load_mat_file():
     dict['block'][i]['channel'][i]['ERPs'][i]
     
     """
-    path=pl.filechooser.open_file()
-    #path=pl.facades.filechooser.open_file()
+    if str(pl.utils.platform) == 'macosx':
+        path='x'
+    else:
+        path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
     
     if len(path):
             f = scipy.io.loadmat(path[0],simplify_cells=True)
