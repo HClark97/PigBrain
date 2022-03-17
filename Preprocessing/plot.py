@@ -17,7 +17,7 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     #PLOT AF RAW DATA I TID OG FREKVENS: 
     data = data*1000 #For at få amplituden i µV
     fig = plt.figure(figsize=(25, 20))
-    plt.suptitle((title + ' - Channel: '+ str(channel+31) + ' Exp: ' + str(exp)),fontsize =25,fontweight='bold')
+    plt.suptitle((title + ' - Channel: '+ str(channel+1) + ' Exp: ' + str(exp)),fontsize =25,fontweight='bold')
     plt.rc('xtick', labelsize=fontsize_labels)
     plt.rc('ytick', labelsize=fontsize_labels)
     plt.subplot(311)
