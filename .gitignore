@@ -1,7 +1,49 @@
+kk# Compiled python files
+*.py[oc]
 
-.spyproject/config/backups/workspace.ini.bak
-.spyproject/config/workspace.ini
-.spyproject/config/workspace.ini
-.spyproject/config/workspace.ini
-.spyproject/config/workspace.ini
-.spyproject/config/backups/workspace.ini.bak
+# gedit files
+*~
+
+# Notepad++ files
+nppBackup/
+
+# Pytest dirs/files
+.pytest_cache/
+
+# Special dirs and files
+installers/Windows/assets/
+build/
+dist/
+bin/
+*.egg-info/
+Thumbs.db
+desktop.ini
+.DS_Store/
+spyder_crash.log
+.DS_Store
+.spyproject
+.idea/
+.cache
+.coverage*
+MANIFEST
+
+# Ignore config file
+.config
+
+# git .orig files
+*.orig
+
+# log files
+*.log
+
+# Rope project folders
+.ropeproject/
+.vscode/
+result.xml
+
+# Pylint dirs/files
+.pylint.d/
+
+# Ignore setuptools development files in the PyLS subrepo
+external-deps/python-lsp-server/.installation-dir/
+*.eps
