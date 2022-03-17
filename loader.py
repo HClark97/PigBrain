@@ -1,20 +1,38 @@
-import tdt
-import numpy as np
-from scipy import signal
-import scipy.fftpack 
-from scipy.fft import fft, fftfreq
-import matplotlib.pyplot as plt
-import FunctionsP7.FFT.Power_density as pdf
+import scipy.io
+import plyer as pl
+import ctypes    
+def load_mat_file():
+    """
+    Parameters
+    ----------
+    path : string
+        DESCRIPTION.
 
-
-#load data
-data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210426-124955')
-fs = data.streams.RSn1.fs
-data = data.streams.RSn1.data
-
-
-#Plot PDF
-pdf.psd_plot(data[1],fs,300)
+    Returns
+    -------
+    Non : dict
+        Contains non-noxious data
+    Nox : dict
+        Contains non-noxious data
+    
+    Help
+    -------
+    Data is accesed using the following syntax:
+    dict['block'][i]['channel'][i]['ERPs'][i]
+    
+    """
+    path=pl.filechooser.open_file()
+    
+    if len(path):
+            f = scipy.io.loadmat(path[0],simplify_cells=True)
+            Non=f['NonnoxERP']
+            Nox=f['NoxERP']
+            return Non,Nox
+            
+    else:
+            ctypes.windll.user32.MessageBoxW(0, "Please select correct file path", "Path not found")
+    
+        
 
 
 
