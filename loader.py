@@ -22,6 +22,7 @@ def load_mat_file():
     
     """
     path=pl.filechooser.open_file()
+    #path=pl.facades.filechooser.open_file()
     
     if len(path):
             f = scipy.io.loadmat(path[0],simplify_cells=True)
