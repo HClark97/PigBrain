@@ -28,10 +28,11 @@ def load_mat_file():
         path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
     
     if len(path):
-            f = scipy.io.loadmat(path[0],simplify_cells=True)
-            Non=f['NonnoxERP']
-            Nox=f['NoxERP']
-            return Non,Nox
+            data = scipy.io.loadmat(path[0],simplify_cells=True)
+            data.pop('__globals__')
+            data.pop('__header__')
+            data.pop('__version__')
+            return data
             
     elif str(pl.utils.platform) == 'win':
             ctypes.windll.user32.MessageBoxW(0, "Please select correct file path", "Path not found")
