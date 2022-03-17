@@ -19,11 +19,11 @@ data = data.streams.RSn1.data
 fig2 = plt.figure()
 pdf.psd_plot(data[2],fs,400)
 
-non/nox, sets,channel, stim/epoch
-for nox in range(np.size([Non,Nox]))
-    for sets in range(np.shape(Nox['block']))
-        for channel in range(np.shape(Nox['block'][0]['channel']))
-            for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs']))
+
+for nox in range(np.size([Non,Nox])):
+    for sets in range(np.shape(Nox['block'])):
+        for channel in range(np.shape(Nox['block'][0]['channel'])):
+            for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
                 ## Baseline correction fra P7
                 # baseline = np.mean(data[nox,sets,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
                 # # Correct the baseline
