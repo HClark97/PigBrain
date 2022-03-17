@@ -32,7 +32,7 @@ def load_mat_file():
             Nox=f['NoxERP']
             return Non,Nox
             
-    else:
+    elif str(pl.utils.platform) == 'win':
             ctypes.windll.user32.MessageBoxW(0, "Please select correct file path", "Path not found")
     
         
