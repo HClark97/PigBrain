@@ -21,7 +21,7 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     plt.rc('xtick', labelsize=fontsize_labels)
     plt.rc('ytick', labelsize=fontsize_labels)
     plt.subplot(311)
-    plt.plot(t,data[channel,:])
+    plt.plot(t,data)
     #plt.xlim([4,5])  #only first part of data 
     plt.ylim([-0.5,0.5])
     plt.grid(True)
@@ -29,8 +29,8 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     plt.ylabel('Amplitude [µV]',fontsize = fontsize_labels,fontweight='bold')
     plt.xlabel('Time [s]',fontsize = fontsize_labels,fontweight='bold')
     plt.subplot(312)
-    raw_data_fft = abs(rfft(data[channel]))
-    freqs = rfftfreq(data[channel].size, 1 / fs)
+    raw_data_fft = abs(rfft(data))
+    freqs = rfftfreq(data.size, 1 / fs)
     plt.plot(freqs, abs(raw_data_fft))
     plt.title("Frequency domain (FFT)",fontsize = fontsize_labels,fontweight='bold')
     plt.xlabel('Frequency [Hz]',fontsize = fontsize_labels,fontweight='bold')
@@ -49,5 +49,3 @@ def plot_data_fft_log (data,t,fs,title, channel,exp):
     plt.xlim([-5,350])
     plt.margins(0, .05)
     plt.subplots_adjust(left = 0.1,bottom = 0.1,right=0.9,top=0.9,wspace=0.2,hspace=0.3)
-
-
