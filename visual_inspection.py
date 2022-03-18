@@ -17,16 +17,21 @@ fontsize_labels = 15
 
 #load data
 #data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210426-124955')
-data = tdt.read_block(r'C:\Users\Mikkel\Desktop\Student data\Without RS4\Subject1-211213-102734')
+data = tdt.read_sev(r'C:\Users\Mikkel\Desktop\Student data\Subject9-210525-095545')
 #data = tdt.read_block(r'/Users/amaliekoch/Desktop/Subject1-210914-103420')
 
-exp = 17
+exp = 11
 channel = 1
 
-fs = data.streams.Wav1.fs#RSn1.fs # sample frequency 
-data = data.streams.Wav1.data#RSn1.data #data 
-t = np.arange(0,len(data[0,:]),1)/fs #time vector
+# fs = data.streams.RSn1.fs # sample frequency .Wav1.fs
+# data = data.streams.RSn1.data #data  Wav1.data
+#t = np.arange(0,len(data[0,:]),1)/fs #time vector
     
+#Til SEV data
+fs = data.RSn1.fs # sample frequency .Wav1.fs
+data = data.RSn1.data #data  Wav1.data
+t = np.arange(0,len(data[0,:]),1)/fs #time vector
+
 #PLOT RAW DATA 
 #p.plot_data_fft_log(data, t, fs, 'Raw data in time and frequency domain. ', channel, exp)
 
