@@ -1,7 +1,7 @@
 import scipy.io
 import plyer as pl
 import ctypes    
-def load_mat_file():
+def load_mat_file(pathString = None):
     """
     Parameters
     ----------
@@ -23,10 +23,18 @@ def load_mat_file():
     """
     
     if str(pl.utils.platform) == 'macosx':
-        path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'])
+        if pathString == 1: 
+            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'])
+        if pathString == 2: 
+            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject9'])
+        if pathString == 3:
+            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1_withoutRS4'])
+        if pathString == None:
+            print('Input path number 1, 2 or 3')
     else:
         path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
-    
+
+        
     if len(path):
             data = scipy.io.loadmat(path[0],simplify_cells=True)
             data.pop('__globals__')
