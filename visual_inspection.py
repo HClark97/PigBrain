@@ -26,9 +26,6 @@ channel = 1
 fs = data.streams.Wav1.fs#RSn1.fs # sample frequency 
 data = data.streams.Wav1.data#RSn1.data #data 
 t = np.arange(0,len(data[0,:]),1)/fs #time vector
-    
-#PLOT RAW DATA 
-#p.plot_data_fft_log(data, t, fs, 'Raw data in time and frequency domain. ', channel, exp)
 
 # Harmonic notch filtering
 harmonics = np.array([50,100,150,200,250,300,350])
