@@ -11,8 +11,7 @@ import mergeFunction as mf
 from scipy.io import savemat
 
 #LOAD DATA
-data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
-
+data=l.load_mat_file(1) #<-- loader alt data 
 
 #REMOVAL OF NOISY CHANNELS 
 # groups --> set + ((exp-1)*3) --> channel   
