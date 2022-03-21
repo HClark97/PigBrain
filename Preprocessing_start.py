@@ -36,10 +36,15 @@ noisy_channels = { # First entry is experiment number, second entry is an array 
 
 #REMOVAL OF NOISY CHANNELS 
 #groups --> set + ((exp-1)*3) --> channel   
+exp = 1
 for group in range(len(data)): #2 --> nonNox og Nox
       for sets in range(len(data['NoxERP']['block'])): #48 
           for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32 
-              for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])):
+              for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100 stim
+                  if noisy_channels[exp][sets] NOT empty:
+                      for len noisy_channels[exp][sets]: #number of noisy channels fra given exp and set
+                      
+
 
 
 # #PRE-PROCESSING OF ALL EPOCHS (baseline, notch & bandpass)
