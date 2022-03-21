@@ -24,7 +24,7 @@ def load_mat_file(pathString = None):
     
     if str(pl.utils.platform) == 'macosx':
         if pathString == 1: 
-            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/'])
+            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/nonpreprocessed_data'])
         # if pathString == 1: 
         #     path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'])
         # if pathString == 2: 
