@@ -11,8 +11,27 @@ import mergeFunction as mf
 from scipy.io import savemat
 
 #LOAD DATA
-data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
+data=l.load_mat_file(1) #<-- til at loade epochs 'nonpreprocessed_data.mat'
 
+noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove
+    1: [{18,20,23,24,np.arange(26,33,1)},{np.arange(17,33,1)},{np.arange(1,33,1)}],
+    2: [{18,20,23},{18,20,23},{18,20,23}],
+    3: [{np.arange(1,33,1)},{},{}],
+    4: [{},{},{14}],
+    5: [{18,20,23},{18,20,23},{18,20,23}],
+    6: [{},{},{}],
+    7: [{{np.arange(1,33,1)}},{},{}],
+    8: [{},{},{}],
+    9: [{31},{31},{31}],
+    10: [{5},{5},{5}],
+    11: [{},{},{}],
+    12: [{},{},{}],
+    13: [{16,18,20,23},{16,18,20,23},{16,18,20,23}],
+    14: [{16,18,20,23,29},{18,20,23,29},{18,20,23,29}],
+    15: [{9,14,np.arange(16,33,1)},{9,14,np.arange(16,33,1)},{9,14,np.arange(16,33,1)}],
+    16: [{18,20,23},{np.arange(1,17,1),18,20,23},{np.arange(1,17,1),18,20,23}],
+    17: [{18,20,23,29},{np.arange(17,33,1)},{np.arange(1,33,1)}],
+}
 
 #REMOVAL OF NOISY CHANNELS 
 # groups --> set + ((exp-1)*3) --> channel   
