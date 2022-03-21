@@ -18,7 +18,7 @@ def load_mat_file(pathString = None):
     Help
     -------
     Data is accesed using the following syntax:
-    data['Non/nox']['block'][i]['channel'][i]['ERPs'][i]
+    data['Non/nox']['block'][i]['channel'][i]['ERPs'][:,i]
     
     """
     
