@@ -11,6 +11,8 @@ from scipy.io import savemat
 
 #LOAD DATA
 data=l.load_mat_file(1) #<-- til at loade epochs 'nonpreprocessed_data.mat'
+fs = 6103.5156 # sample frequency
+samplesPrEpoch = (fs/1000)*550
 
 noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove
     1: [{18,20,23,24,np.arange(26,33,1)},{np.arange(17,33,1)},{np.arange(1,33,1)}],
@@ -29,15 +31,15 @@ noisy_channels = { # First entry is experiment number, second entry is an array 
     14: [{16,18,20,23,29},{18,20,23,29},{18,20,23,29}],
     15: [{9,14,np.arange(16,33,1)},{9,14,np.arange(16,33,1)},{9,14,np.arange(16,33,1)}],
     16: [{18,20,23},{np.arange(1,17,1),18,20,23},{np.arange(1,17,1),18,20,23}],
-    17: [{18,20,23,29},{np.arange(17,33,1)},{np.arange(1,33,1)}],
+    17: [{18,20,23,29},{np.arange(17,33,1)},{np.arange(1,33,1)}]
 }
 
 #REMOVAL OF NOISY CHANNELS 
-# groups --> set + ((exp-1)*3) --> channel   
-# for group in range(np.size(data)):
-#       for sets in range(np.shape(data['NoxERP']['block'])):
-#           for channel in range(np.shape(data['NonnoxERP']['block'][0]['channel'])):
-#               for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
+#groups --> set + ((exp-1)*3) --> channel   
+for group in range(len(data)): #2 --> nonNox og Nox
+      for sets in range(len(data['NoxERP']['block'])): #48 
+          for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32 
+              for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])):
 
 
 # #PRE-PROCESSING OF ALL EPOCHS (baseline, notch & bandpass)
