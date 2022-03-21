@@ -40,7 +40,7 @@ for exp in range(1,(round(len(data['NoxERP']['block'])/3)+1)): #16
         if noisy_channels[exp][sets]: #if not empty
               for index in range(len(noisy_channels[exp][sets])): #number of noisy channels fra given exp and set 
                   Nchannel = noisy_channels[exp][sets][index] #channel to remove
-                  if not np.size(data['NonnoxERP']['block'][sets+((exp-1)*3)]['channel']): #If there are stimulations 
+                  if np.size(data['NonnoxERP']['block'][sets+((exp-1)*3)]['channel']): #If there are stimulations 
                     data['NonnoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel]['ERPs'] = [0] #removes nonNox set 
                     data['NoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel]['ERPs'] = [0] #removes nox set 
                         
