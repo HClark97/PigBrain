@@ -12,17 +12,7 @@ from scipy.io import savemat
 
 #LOAD DATA
 data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
-data2=l.load_mat_file(2) #<-- til at loade epochs fra subject 9
-data3=l.load_mat_file(3) #<-- til at loade epochs fra subject 1 without RS4
 
-data1['NoxERP']['block'].extend(data2['NoxERP']['block'])
-data1['NonnoxERP']['block'].extend(data2['NonnoxERP']['block'])
-data1['NoxERP']['block'].extend(data3['NoxERP']['block'])
-data1['NonnoxERP']['block'].extend(data3['NonnoxERP']['block'])
-#dataTest = mf.Merge(data1,data2)# sætter alle epochs sammen 
-savemat("nonpreprocessed_data.mat", data1)
-
-fs = 6103.5156 # sample frequency
 
 #REMOVAL OF NOISY CHANNELS 
 # groups --> set + ((exp-1)*3) --> channel   
