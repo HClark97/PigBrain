@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import FunctionsP7.FFT.Power_density as pdf
 import FunctionsP7.filtering.filters as butfilt
 import loader as l
-import mergeFunction as mf
 from scipy.io import savemat
 
 #LOAD DATA
@@ -35,11 +34,10 @@ noisy_channels = { # First entry is experiment number, second entry is an array 
 
 #REMOVAL OF NOISY CHANNELS 
 # groups --> set + ((exp-1)*3) --> channel   
-#             
 # for group in range(np.size(data)):
-#      for sets in range(np.shape(data['NoxERP']['block'])):
-#          for channel in range(np.shape(data['NonnoxERP']['block'][0]['channel'])):
-#              for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
+#       for sets in range(np.shape(data['NoxERP']['block'])):
+#           for channel in range(np.shape(data['NonnoxERP']['block'][0]['channel'])):
+#               for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
 
 
 # #PRE-PROCESSING OF ALL EPOCHS (baseline, notch & bandpass)
