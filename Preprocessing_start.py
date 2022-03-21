@@ -8,11 +8,22 @@ import FunctionsP7.FFT.Power_density as pdf
 import FunctionsP7.filtering.filters as butfilt
 import loader as l
 import mergeFunction as mf
+from scipy.io import savemat
 
 #LOAD DATA
 # data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
 # data2=l.load_mat_file(2) #<-- til at loade epochs fra subject 9
 # data3=l.load_mat_file(3) #<-- til at loade epochs fra subject 1 without RS4
+data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
+data2=l.load_mat_file(2) #<-- til at loade epochs fra subject 9
+data3=l.load_mat_file(3) #<-- til at loade epochs fra subject 1 without RS4
+
+data1['NoxERP']['block'].extend(data2['NoxERP']['block'])
+data1['NonnoxERP']['block'].extend(data2['NonnoxERP']['block'])
+data1['NoxERP']['block'].extend(data3['NoxERP']['block'])
+data1['NonnoxERP']['block'].extend(data3['NonnoxERP']['block'])
+#dataTest = mf.Merge(data1,data2)# sætter alle epochs sammen 
+savemat("nonpreprocessed_data.mat", data1)
 
 data=l.load_mat_file(1) #<-- loader alt data 
 fs = 6103.5156 # sample frequency
@@ -20,7 +31,7 @@ fs = 6103.5156 # sample frequency
 #REMOVAL OF NOISY CHANNELS 
 # groups --> set + ((exp-1)*3) --> channel   
 #             
-# for group in range(np.size([Non,Nox])):
+# for group in range(np.size(data)):
 #      for sets in range(np.shape(data['NoxERP']['block'])):
 #          for channel in range(np.shape(data['NonnoxERP']['block'][0]['channel'])):
 #              for epoch in range(np.size(Nox['block'][0]['channel'][0]['ERPs'])):
