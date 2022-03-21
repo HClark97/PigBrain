@@ -10,11 +10,11 @@ import loader as l
 import mergeFunction as mf
 
 #LOAD DATA
-data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
-data2=l.load_mat_file(2) #<-- til at loade epochs fra subject 9
-data3=l.load_mat_file(3) #<-- til at loade epochs fra subject 1 without RS4
+# data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
+# data2=l.load_mat_file(2) #<-- til at loade epochs fra subject 9
+# data3=l.load_mat_file(3) #<-- til at loade epochs fra subject 1 without RS4
 
-
+data=l.load_mat_file(1) #<-- loader alt data 
 fs = 6103.5156 # sample frequency
 
 #REMOVAL OF NOISY CHANNELS 
