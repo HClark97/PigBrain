@@ -12,7 +12,7 @@ from scipy.io import savemat
 #LOAD DATA
 data=l.load_mat_file(1) #<-- til at loade epochs 'nonpreprocessed_data.mat'
 fs = 6103.5156 # sample frequency
-#samplesPrEpoch = (fs/1000)*550
+samplesPrEpoch = (fs/1000)*550
 
 noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove
     1: [[18,20,23,24,26,27,28,29,30,31,32],[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]],
@@ -45,7 +45,6 @@ for exp in range(1,(round(len(data['NoxERP']['block'])/3)+1)): #16
                     data['NoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel-1]['ERPs'] = [] #removes nox set 
 
 # #PRE-PROCESSING OF ALL EPOCHS (baseline, notch & bandpass)
-
 groupname = ['NonnoxERP','NoxERP']
 for group in len(groupname): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
