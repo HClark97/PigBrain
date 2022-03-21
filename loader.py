@@ -24,13 +24,15 @@ def load_mat_file(pathString = None):
     
     if str(pl.utils.platform) == 'macosx':
         if pathString == 1: 
-            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'])
-        if pathString == 2: 
-            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject9'])
-        if pathString == 3:
-            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1_withoutRS4'])
-        if pathString == None:
-            print('Input path number 1, 2 or 3')
+            path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/'])
+        # if pathString == 1: 
+        #     path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1'])
+        # if pathString == 2: 
+        #     path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject9'])
+        # if pathString == 3:
+        #     path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/ERPs_Subject1_withoutRS4'])
+        # if pathString == None:
+        #     print('Input path number 1, 2 or 3')
     else:
         path=pl.filechooser.open_file(filters=[("Binary MATLAB file (*.mat)", "*.mat")])
 
