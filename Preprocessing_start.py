@@ -14,8 +14,6 @@ data1=l.load_mat_file(1) #<-- til at loade epochs fra subject 1
 data2=l.load_mat_file(2) #<-- til at loade epochs fra subject 9
 data3=l.load_mat_file(3) #<-- til at loade epochs fra subject 1 without RS4
 
-dataTest = mf.Merge(data1,data2)# sætter alle epochs sammen 
-
 
 fs = 6103.5156 # sample frequency
 
