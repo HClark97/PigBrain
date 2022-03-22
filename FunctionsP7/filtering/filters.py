@@ -42,7 +42,7 @@ def filt_filt_but(dataArray, filtType, order, critFreq, fs):
     return signal.sosfiltfilt(sos, dataArray)
 
 
-def filt_filt_but_harmonic(dataArray, filtType, order, critFreq, fs):
+def filt_filt_butter(dataArray, filtType, order, critFreq, fs):
     """
     Apply a digital Butterworth filter to the data array using sosfiltfilt, with the given order and critical frquency.
 
