@@ -72,7 +72,7 @@ def filt_filt_but_harmonic(dataArray, filtType, order, critFreq, fs):
         wn[1] = ((critFreq[i])+1) / (fs / 2)
         # Design the filter
         sos = signal.butter(order, wn, btype=filtType, output='sos')
-        filtdata = signal.sosfiltfilt(sos, filtdata)
+        filtdata = signal.sosfiltfilt(sos, filtdata)#try
     return filtdata
 
 def filt_filt_nocth(data, crit_freq, Q, fs):
