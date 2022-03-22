@@ -50,3 +50,6 @@ external-deps/python-lsp-server/.installation-dir/
 __pycache__/loader.cpython-39.pyc
 __pycache__/loader.cpython-39.pyc
 *.pyc
+*.pyc
+*.ini
+*.bak
