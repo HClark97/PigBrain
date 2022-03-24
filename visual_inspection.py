@@ -39,6 +39,7 @@ harmonics = np.array([50,100,150,200])
 for i in range (1):
     notch_data = f.filt_filt_nocth_harmonic(data[i],harmonics, fs)
     band_notch_data = f.filt_filt_but(notch_data, 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
+    
     p.plot_data_fft_log(band_notch_data,
                         t,
                         fs,
