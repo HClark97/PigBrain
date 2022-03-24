@@ -75,7 +75,7 @@ def filt_filt_butter(dataArray, filtType, order, critFreq, fs):
         filtdata = signal.sosfiltfilt(sos, filtdata)#try
     return filtdata
 
-def filt_filt_nocth(data, crit_freq, Q, fs):
+def filt_filt_notch(data, crit_freq, Q, fs):
     """
     Filter a data array using a notch filter with the specified parameters.
 
