@@ -55,7 +55,7 @@ for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
         for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
             for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
-                if np.size(data[groupname[group]]['block'][sets]['channel'][channel]): #If there are stimulations 
+                if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
                     print('Im epoch no: '+ str(epoch) + ' set: '+ str(channel) + ' set: '+ str(sets))
                     temp_epoch = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] #epoch of 550 ms
                     filtered_data = f.filt_filt_nocth_harmonic(temp_epoch,[50,100,150,200,250,300,350,400,450], fs) #garmonics filtering 
