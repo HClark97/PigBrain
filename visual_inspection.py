@@ -17,7 +17,7 @@ fontsize_labels = 15
 
 #load data
 #data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210426-124955')
-data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject1-210913-131914')
+data = tdt.read_block(r'C:\Users\mbj\Desktop\Uni\8. semester\Projekt\Data\Subject9-210427-112449')
 #data = tdt.read_block(r'/Users/amaliekoch/Desktop/Subject1-210914-103420')
 
 exp = 17
@@ -34,11 +34,11 @@ t = np.arange(0,len(data[0,:]),1)/fs #time vector
 #t = np.arange(0,len(data[0,:]),1)/fs #time vector
 
 ## Harmonics til filtrering
-harmonics = np.array([50,100,150,200])
+harmonics = np.array([50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900])
 
 for i in range (1):
     notch_data = f.filt_filt_nocth_harmonic(data[i],harmonics, fs)
-    band_notch_data = f.filt_filt_but(notch_data, 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
+    band_notch_data = f.filt_filt_but(notch_data, 'band', 5, [1,3000], fs) #10 order effective lowpass filter at 400 hz
     
     p.plot_data_fft_log(band_notch_data,
                         t,
