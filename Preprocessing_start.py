@@ -12,10 +12,13 @@ import Preprocessing.plot as pp
 
 #LOAD DATA
 data=l.load_mat_file(1) #<-- til at loade epochs 'nonpreprocessed_data.mat'
-fs =  6103.5156
-#fs = 6103.5156 # sample frequency
+fs = np.float64(6103.515625) #sample frequency, fs =  6103.5156
 samplesPrEpoch = (fs/1000)*550
 
+filtered_data = np.zeros(3358, dtype=np.float64)
+temp_epoch = np.zeros(3358, dtype=np.float64)
+
+#NOISY CHANNELS
 noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove
     1: [[18,20,23,24,26,27,28,29,30,31,32],[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]],
     2: [[18,20,23],[18,20,23],[18,20,23]],
@@ -46,42 +49,22 @@ for exp in range(1,(round(len(data['NoxERP']['block'])/3)+1)): #16
                     data['NonnoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel-1]['ERPs'] = [] #removes nonNox set 
                     data['NoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel-1]['ERPs'] = [] #removes nox set 
 
-epoch = data['NonnoxERP']['block'][24]['channel'][0]['ERPs'][:,0]
+# FILTERING OF ALL EPOCHS (notch 50 Hz, notch harmonics & bandpass 1-500)
+groupname = ['NonnoxERP','NoxERP']
+for group in range (len(groupname)): #2: nox and nonNox
+    for sets in range(len(data['NonnoxERP']['block'])): #48 
+        for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
+            for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
+                if np.size(data[groupname[group]]['block'][sets]['channel'][channel]): #If there are stimulations 
+                    print('Im epoch no: '+ str(epoch) + ' set: '+ str(channel) + ' set: '+ str(sets))
+                    temp_epoch = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] #epoch of 550 ms
+                    filtered_data = f.filt_filt_nocth_harmonic(temp_epoch,[50,100,150,200,250,300,350,400,450], fs) #garmonics filtering 
+                    filtered_data = f.filt_filt_but(filtered_data, 'stop', 8, [48,52], fs) #16 order effective bandstop filter around 50 Hz
+                    filtered_data = f.filt_filt_but(filtered_data, 'high', 5, 1, fs) #10 order effective highpass filter at 1 Hz
+                    filtered_data = f.filt_filt_but(filtered_data, 'low', 2, 500, fs) #10 order effective lowpass filter at 250 hz
+                    data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] = filtered_data
+                    
+#savemat("preprocessed_data.mat", data) 
 
-t = np.arange(0,len(epoch),1)/fs #time vector
-
-notch_data = f.filt_filt_nocth_harmonic(epoch,[50,100,150,200], fs)
-high_notch_data = f.filt_filt_but(notch_data, 'high', 5, 1, fs) #10 order effective lowpass filter at 400 hz
-band_notch_data = f.filt_filt_but(high_notch_data, 'low', 5, 250, fs) #10 order effective lowpass filter at 400 hz
-
-
-baseTime = round((fs/1000)*50)
-baseline = np.mean(band_notch_data[0:baseTime])
-baselineCorrected = band_notch_data - baseline
-
-pp.plot_data_fft_log(epoch, t, fs, 'raw epoch', 1, 1)
-pp.plot_data_fft_log(band_notch_data, t, fs, 'Filtered epoch', 1, 1)
-pp.plot_data_fft_log(baselineCorrected, t, fs, 'Baseline corrected epoch', 1, 1)
-
-# # #PRE-PROCESSING OF ALL EPOCHS (baseline, notch & bandpass)
-# groupname = ['NonnoxERP','NoxERP']
-# for group in len(groupname): #2: nox and nonNox
-#     for sets in range(len(data['NonnoxERP']['block'])): #48 
-#         for channel in range(len(data['NonnoxERP']['block'][sets]['channel'])): #32
-#             for epoch in range(len(data['NonnoxERP']['block'][sets]['channel'][channel]['ERPs'][0])):
-#                 ## Baseline correction fra P7
-#                 epoch = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] #epoch of 550 ms
-#                 # baseline = np.mean(data[group,sets,channel,epoch]) #Taking the first 50 ms of the data for baseline correction for exp, channel and epoch
-#                 # # Correct the baseline
-#                 # data[group,sets,channel,epoch] = data[exp,channel,epoch] - baseline
-                
-#                 ## Notch filtering (+harmonics) 
-#                 # harmonics = np.array([50,100,150,200,250,300,350])
-                
-#                 ## Bandpas filtering (1-250Hz) 
-#                 # data[group,sets,channel,epoch] = f.filt_filt_nocth_harmonic(data[group,sets,channel,epoch],harmonics, fs)
-#                 # data[group,sets,channel,epoch] = f.filt_filt_but(data[group,sets,channel,epoch], 'band', 5, [1,250], fs) #10 order effective lowpass filter at 400 hz
-
-#                 #savemat("preprocessed_data.mat", data)
 
 
