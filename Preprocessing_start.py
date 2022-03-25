@@ -3,7 +3,7 @@
 import numpy as np
 import FunctionsP7.filtering.filters as f
 import loader as l
-
+from scipy.io import savemat
 #LOAD DATA
 data=l.load_mat_file(1) #<-- til at loade epochs 'nonpreprocessed_data.mat'
 fs = np.float64(6103.515625) #sample frequency, fs =  6103.5156
