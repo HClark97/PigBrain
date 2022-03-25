@@ -49,22 +49,23 @@ for exp in range(1,(round(len(data['NoxERP']['block'])/3)+1)): #16
                     data['NonnoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel-1]['ERPs'] = [] #removes nonNox set 
                     data['NoxERP']['block'][sets+((exp-1)*3)]['channel'][Nchannel-1]['ERPs'] = [] #removes nox set 
 
+
 # FILTERING OF ALL EPOCHS (notch 50 Hz, notch harmonics & bandpass 1-500)
 groupname = ['NonnoxERP','NoxERP']
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
         for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
             for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
-                if np.size(data[groupname[group]]['block'][sets]['channel'][channel]): #If there are stimulations 
-                    print('Im epoch no: '+ str(epoch) + ' set: '+ str(channel) + ' set: '+ str(sets))
-                    temp_epoch = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] #epoch of 550 ms
-                    filtered_data = f.filt_filt_nocth_harmonic(temp_epoch,[50,100,150,200,250,300,350,400,450], fs) #garmonics filtering 
-                    filtered_data = f.filt_filt_but(filtered_data, 'stop', 8, [48,52], fs) #16 order effective bandstop filter around 50 Hz
-                    filtered_data = f.filt_filt_but(filtered_data, 'high', 5, 1, fs) #10 order effective highpass filter at 1 Hz
-                    filtered_data = f.filt_filt_but(filtered_data, 'low', 2, 500, fs) #10 order effective lowpass filter at 250 hz
-                    data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] = filtered_data
+                if np.size(data['NonnoxERP']['block'][sets]['channel']):
+                    if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
+                        temp_epoch = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] #epoch of 550 ms
+                        filtered_data = f.filt_filt_nocth_harmonic(temp_epoch,[50,100,150,200,250,300,350,400,450], fs) #garmonics filtering 
+                        filtered_data = f.filt_filt_but(filtered_data, 'stop', 8, [48,52], fs) #16 order effective bandstop filter around 50 Hz
+                        filtered_data = f.filt_filt_but(filtered_data, 'high', 5, 1, fs) #10 order effective highpass filter at 1 Hz
+                        filtered_data = f.filt_filt_but(filtered_data, 'low', 2, 500, fs) #10 order effective lowpass filter at 250 hz
+                        data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] = filtered_data
                     
-#savemat("preprocessed_data.mat", data) 
+savemat("preprocessed_data.mat", data) 
 
 
 
