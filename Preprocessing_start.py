@@ -19,7 +19,7 @@ filtered_data = np.zeros(3358, dtype=np.float64)
 temp_epoch = np.zeros(3358, dtype=np.float64)
 
 #NOISY CHANNELS
-noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove
+noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove for set 1, 2 and 3 respectively
     1: [[18,20,23,24,26,27,28,29,30,31,32],[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]],
     2: [[18,20,23],[18,20,23],[18,20,23]],
     3: [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[],[]],
@@ -61,7 +61,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                     filtered_data = f.filt_filt_nocth_harmonic(temp_epoch,[50,100,150,200,250,300,350,400,450], fs) #garmonics filtering 
                     filtered_data = f.filt_filt_but(filtered_data, 'stop', 8, [48,52], fs) #16 order effective bandstop filter around 50 Hz
                     filtered_data = f.filt_filt_but(filtered_data, 'high', 5, 1, fs) #10 order effective highpass filter at 1 Hz
-                    filtered_data = f.filt_filt_but(filtered_data, 'low', 2, 500, fs) #10 order effective lowpass filter at 250 hz
+                    filtered_data = f.filt_filt_but(filtered_data, 'low', 2, 500, fs) #4 order effective lowpass filter at 250 hz
                     data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] = filtered_data
                     
 #savemat("preprocessed_data.mat", data) 
