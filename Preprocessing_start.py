@@ -1,25 +1,19 @@
+## USE THIS FILE TO PRE-PROCESSES EPOCHS 
 
 import numpy as np
-from scipy import signal
-import scipy.fftpack 
-from scipy.fft import fft, fftfreq
-import matplotlib.pyplot as plt
-import FunctionsP7.FFT.Power_density as pdf
 import FunctionsP7.filtering.filters as f
 import loader as l
-from scipy.io import savemat
-import Preprocessing.plot as pp
 
 #LOAD DATA
 data=l.load_mat_file(1) #<-- til at loade epochs 'nonpreprocessed_data.mat'
 fs = np.float64(6103.515625) #sample frequency, fs =  6103.5156
-samplesPrEpoch = (fs/1000)*550
+#samplesPrEpoch = (fs/1000)*550
 
 filtered_data = np.zeros(3358, dtype=np.float64)
 temp_epoch = np.zeros(3358, dtype=np.float64)
 
-#NOISY CHANNELS
-noisy_channels = { # First entry is experiment number, second entry is an array of channels to remove
+#NOISY CHANNELS IDENTIFIED 
+noisy_channels = { # First entry is experiment number, second entry is 3 arrays of channels to remove for set 1, 2 and 3 respectively
     1: [[18,20,23,24,26,27,28,29,30,31,32],[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]],
     2: [[18,20,23],[18,20,23],[18,20,23]],
     3: [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[],[]],
@@ -38,9 +32,8 @@ noisy_channels = { # First entry is experiment number, second entry is an array 
     16: [[18,20,23,29],[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]]
 }
 
-#REMOVAL OF NOISY CHANNELS 
-#exp --> set + ((exp-1)*3) --> channel   
-for exp in range(1,(round(len(data['NoxERP']['block'])/3)+1)): #16
+#REMOVAL OF NOISY CHANNELS  
+for exp in range(1,(round(len(data['NoxERP']['block'])/3)+1)): #16 exp
     for sets in range (3): #3 sets i hver exp 
         if noisy_channels[exp][sets]: #if not empty
               for index in range(len(noisy_channels[exp][sets])): #number of noisy channels fra given exp and set 
@@ -67,5 +60,5 @@ for group in range (len(groupname)): #2: nox and nonNox
                     
 savemat("preprocessed_data.mat", data) 
 
-
+    
 
