@@ -58,7 +58,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                         filtered_data = f.filt_filt_but(filtered_data, 'low', 2, 500, fs) #10 order effective lowpass filter at 250 hz
                         data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] = filtered_data
                     
-savemat("preprocessed_data.mat", data) 
+#savemat("preprocessed_data.mat", data) 
 
     
 
