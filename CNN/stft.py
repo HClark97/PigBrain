@@ -34,7 +34,6 @@ for i in range(1):
     # out_real = stft[:, :, 0]
     # out_imag = stft[:, :, 1]
     # out_abs = nn.sqrt(out_real**2 + out_imag**2)
-    stft=np.abs(stft)
 
     'Arrange axis vectors'
     py_t = np.arange(len(stft[0]))*len(stim)/float(fs)/len(stft[0])
@@ -42,7 +41,7 @@ for i in range(1):
     
     'Plot colormap'
     plt.figure()
-    plt.pcolormesh(py_t,py_f,stft, cmap=cm.plasma)
+    plt.pcolormesh(py_t,py_f,np.abs(stft), cmap=cm.plasma)
     plt.xlabel('Time [sec]', fontweight='bold')
     plt.ylabel('Frequency [Hz]', fontweight='bold')
     plt.colorbar()
