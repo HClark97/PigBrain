@@ -25,10 +25,9 @@ stft_dic=copy.deepcopy(data)
 fs = 6103.515625
 n_fft = 256
 groupname = ['NonnoxERP','NoxERP']
-i=0
 
 'Open up data'
-for group in range (len(groupname)): #2: nox and nonNox
+for group in range (1):#len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
         print('Set '+ str(sets+1))
         for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
@@ -59,5 +58,6 @@ for group in range (len(groupname)): #2: nox and nonNox
                             # plt.colorbar()
                             # plt.ylim(0,300)
 
+
 #savemat("stft_tensor.mat", stft_dic)
-                        
+

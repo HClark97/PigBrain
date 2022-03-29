@@ -1,4 +1,10 @@
-from torchvision.datasets import MNIST
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 21 10:54:19 2022
+
+@author: HClark
+"""
+
 from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
 import torch.nn as nn
@@ -6,6 +12,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch
 import h5py
+
+'''### Device configuration ###'''
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 '''### Hyperparameters ###'''
 batch_size = 32
@@ -20,34 +29,40 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
 '''### Model definition ###'''
 ### Define architecture
-class Net(nn.Module):
+class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, padding=2)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2)
-        self.linear1 = nn.Linear(in_features=64*28//4*28//4, out_features=512)
-        self.linear2 = nn.Linear(in_features=512, out_features=10)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(in_features=16 * 5 * 5, out_features=120)
+        self.fc2 = nn.Linear(in_features=120, out_features=84)
+        self.fc3 = nn.Linear(in_features=84, out_features=10)
 
     def forward(self, x):
-        x = F.max_pool2d(F.relu(self.conv1(x)), 2)
-        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
-        x = x.view(x.size()[0], -1)
-        x = F.relu(self.linear1(x))
+        x = self.pool(F.relu(self.conv1(x)))  # -> n, 6, 14, 14
+        x = self.pool(F.relu(self.conv2(x)))  # -> n, 16, 5, 5
+        x = x.view(-1, 16 * 5 * 5)            # -> n, 400
+        x = F.relu(self.fc1(x))               # -> n, 120
+        x = F.relu(self.fc2(x))               # -> n, 84
         x = F.dropout(x, p=0.5, training=self.training)
-        x = self.linear2(x)
+        x = self.fc3(x)                       # -> n, 10
+        
         return x
+    
 ### Instantiate the network
-model = Net()
+model = ConvNet().to(device)
 ### Define the optimizer
 optimizer = optim.Adam(model.parameters())
 ### Define the loss function
 criterion = nn.CrossEntropyLoss()
 
 '''### Training ###'''
+train_loss_history = list()
 ### Run through epochs
 for epoch in range(epochs):
     ### Run through batches
-    running_loss = 0.0
+    train_loss = 0.0
     for i, (imgs, labels) in enumerate(train_loader):
         ### Zero the gradients of the network
         optimizer.zero_grad()
@@ -60,18 +75,39 @@ for epoch in range(epochs):
         ### Make a step with the optimizer
         optimizer.step()
 
+
         ### Print progress
-        running_loss += loss.item()
+        train_loss += loss.item()
         if i % 40 == 39:  # print every 2000 mini-batches
             print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
                   epoch + 1, i + 1, len(train_loader), running_loss / 2000))
             running_loss = 0.0
 
 
-correct = 0
-for i, (imgs, labels) in enumerate(test_loader):
-    outputs = model(imgs)
-    prediction = torch.argmax(outputs.data, 1)
-    correct += (prediction == labels).float().sum()
-accuracy = correct / len(test_dataset)
-print("Accuracy = {}".format(accuracy))
+'''### Validation model ###'''
+val_loss_history = list()
+for epoch in range epochs:
+    train_loss = 0.0
+    for i, (imgs, labels) in enumerate(train_loader):
+     
+        
+        
+        
+
+'''### Testing model ###'''
+model = ConvNet().to(device)
+model.load_state_dict(torch.load("Filename"))
+model.eval()
+n_correct = 0
+n_samples = 0
+with torch.no_grad():
+    for images, labels in  enumerate(test_loader):
+        images = images.to(device)
+        labels = labels.to(device)
+        outputs = model(images)
+        # max returns (value ,index)
+        _, predicted = torch.max(outputs, 1)
+        n_samples += labels.size(0)
+        n_correct += (predicted == labels).sum().item()
+    accuracy = 100.0 * n_correct / n_samples
+    print(f'Accuracy of the network: {accuracy} %')
