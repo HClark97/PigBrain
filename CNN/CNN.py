@@ -12,6 +12,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch
 import h5py
+import matplotlib as plt
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -24,8 +25,12 @@ epochs = 5
 train_dataset = MNIST('/files/', train=True, download=True, transform=ToTensor())
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
+val_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
+
 test_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+
 
 '''### Model definition ###'''
 ### Define architecture
@@ -59,6 +64,8 @@ criterion = nn.CrossEntropyLoss()
 
 '''### Training ###'''
 train_loss_history = list()
+n_correct = 0
+n_samples = 0
 ### Run through epochs
 for epoch in range(epochs):
     ### Run through batches
@@ -75,24 +82,41 @@ for epoch in range(epochs):
         ### Make a step with the optimizer
         optimizer.step()
 
-
-        ### Print progress
+        ### Save losses
         train_loss += loss.item()
+        
+        ### Print Epoch, batch and loss
         if i % 40 == 39:  # print every 2000 mini-batches
             print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
-                  epoch + 1, i + 1, len(train_loader), running_loss / 2000))
-            running_loss = 0.0
+                  epoch + 1, i + 1, len(train_loader), train_loss / 2000))
+    ### Save loss in history        
+    train_loss = train_loss/len(train_loader)
+    train_loss_history.append(train_loss)
 
 
 '''### Validation model ###'''
+model.eval() 
 val_loss_history = list()
-for epoch in range epochs:
-    train_loss = 0.0
-    for i, (imgs, labels) in enumerate(train_loader):
-     
+for epoch in range(epochs):
+    val_loss = 0.0
+    for i, (imgs, labels) in enumerate(val_loader):
+        prediction = model(imgs)
+        val_loss += criterion(prediction, labels).item()
         
+    val_loss = val_loss/len(val_loader)
+    val_loss_history.append(val_loss)
         
-        
+
+'''### Plot test and validation model ###'''
+plt.plot(train_loss_history, label='train')        
+plt.plot(val_loss_history, label='validation')
+plt.title('Loss model')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend()
+plt.show()
+
+
 
 '''### Testing model ###'''
 model = ConvNet().to(device)
