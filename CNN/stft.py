@@ -24,7 +24,7 @@ groupname = ['NonnoxERP','NoxERP']
 i=0
 
 'Open up data'
-for group in range (len(groupname)): #2: nox and nonNox
+for group in range (1):#len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
         for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
             for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
@@ -54,5 +54,5 @@ for group in range (len(groupname)): #2: nox and nonNox
                         # plt.colorbar()
                         # plt.ylim(0,300)
 
-savemat("stft_tensor.mat", data) 
+
                         
