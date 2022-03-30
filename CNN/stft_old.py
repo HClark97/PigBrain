@@ -14,14 +14,14 @@ import scipy
 from scipy import signal
 
 'Load data'
-if not 'data' in locals():
+if not 'data' in globals():
     data=l.load_mat_file()
 
 'Definitions'
 fs = 6103.515625
 n_fft = 256
 
-for i in range(1):
+for i in range(5):
     stim=data['NoxERP']['block'][5]['channel'][0]['ERPs'][:,i]
     
     'Turn stim into tensor'
@@ -41,16 +41,16 @@ for i in range(1):
     py_f = np.arange(0,len(stft))*float(fs/2)/len(stft)
     
     'Plot colormap'
-    plt.figure()
-    plt.pcolormesh(py_t,py_f,np.abs(stft), cmap=cm.plasma)
-    plt.xlabel('Time [sec]', fontweight='bold')
-    plt.ylabel('Frequency [Hz]', fontweight='bold')
-    plt.colorbar()
-    plt.ylim(0,500)
+    # plt.figure()
+    # plt.pcolormesh(py_t,py_f,np.abs(stft), cmap=cm.plasma)
+    # plt.xlabel('Time [sec]', fontweight='bold')
+    # plt.ylabel('Frequency [Hz]', fontweight='bold')
+    # plt.colorbar()
     
     
     plt.figure()
-    plt.pcolormesh(np.abs(Zxx), cmap=cm.plasma)
+    plt.pcolormesh(t,f,np.abs(Zxx), cmap=cm.plasma)
     plt.xlabel('Time [sec]', fontweight='bold')
     plt.ylabel('Frequency [Hz]', fontweight='bold')    
     plt.colorbar()
+    plt.ylim(0,500)
