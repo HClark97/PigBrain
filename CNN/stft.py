@@ -27,13 +27,13 @@ n_fft = 256
 groupname = ['NonnoxERP','NoxERP']
 
 'Open up data'
-for group in range (1):#len(groupname)): #2: nox and nonNox
+for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
         print('Set '+ str(sets+1))
         for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
             if np.size(data['NonnoxERP']['block'][sets]['channel']):
                 stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
-                print('Deleted entry in channel '+ str(channel+1))
+                #print('Deleted entry in channel '+ str(channel+1))
                 for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
