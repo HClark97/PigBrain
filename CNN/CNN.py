@@ -94,7 +94,14 @@ for epoch in range(epochs):
     train_loss_history.append(train_loss)
 
 
+### Save model
+torch.save(model.state_dict(), FILEPATH)
+
+
+
 '''### Validation model ###'''
+model = ConvNet().to(device)
+model.load_state_dict(torch.load("Filename"))
 model.eval() 
 val_loss_history = list()
 for epoch in range(epochs):
