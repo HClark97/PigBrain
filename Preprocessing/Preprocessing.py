@@ -1,7 +1,7 @@
 ## USE THIS FILE TO PRE-PROCESSES EPOCHS 
 
 import numpy as np
-import FunctionsP7.filtering.filters as f
+import Functions.filtering.filters as f
 import loader as l
 from scipy.io import savemat
 #LOAD DATA

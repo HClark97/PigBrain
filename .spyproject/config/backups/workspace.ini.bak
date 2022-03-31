@@ -4,8 +4,9 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['..\\..\\..\\.spyder-py3\\temp.py', 'CNN\\stft.py']
+recent_files = ['Preprocessing\\visual_inspect_epoch.py', 'CNN\\stft.py', 'Preprocessing\\visual_inspection.py', 'Preprocessing\\Preprocessing.py']
 
 [main]
 version = 0.2.0
+recent_files = []
 
