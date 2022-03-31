@@ -14,6 +14,7 @@ import scipy
 from scipy import signal
 from scipy.io import savemat
 import copy
+import mpu
 
 'Load data'
 if not 'data' in globals():
@@ -58,13 +59,14 @@ for group in range (len(groupname)): #2: nox and nonNox
                             stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                                                         
                             # 'Plot colormap'
-                            plt.figure()
-                            plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
-                            plt.xlabel('Time [sec]', fontweight='bold')
-                            plt.ylabel('Frequency [Hz]', fontweight='bold')    
-                            plt.colorbar()
+                            # plt.figure()
+                            # plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
+                            # plt.xlabel('Time [sec]', fontweight='bold')
+                            # plt.ylabel('Frequency [Hz]', fontweight='bold')    
+                            # plt.colorbar()
                             # plt.ylim(0,300)
 
 
-#savemat("stft_tensor.mat", stft_dic)
+mpu.io.write('STFT.pickle', stft_dic)
 
+# unserialized_data = mpu.io.read('filename.pickle')
