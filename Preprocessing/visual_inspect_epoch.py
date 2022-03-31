@@ -18,7 +18,7 @@ import copy
 if not 'data' in globals():
     data=l.load_mat_file()
 fs = np.float64(6103.515625)
-t = np.arange(0,len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs']),1)/fs
+t = (np.arange(0,len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs']),1)/fs)-0.05
 
 groupname = ['NonnoxERP','NoxERP']
 for group in range (len(groupname)): #2: nox and nonNox
@@ -32,3 +32,5 @@ for group in range (len(groupname)): #2: nox and nonNox
                     plt.title('Stim: ' + str(groupname[group]) + ' Set: '+ str(sets+1)+' Channel: ' + str(channel+1))
                     plt.xlabel('Time [s]')
                     plt.ylabel('Amplitude [mV]')
+                        
+                    

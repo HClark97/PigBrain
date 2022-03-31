@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['Preprocessing\\visual_inspect_epoch.py', 'CNN\\stft.py', 'Preprocessing\\visual_inspection.py', 'Preprocessing\\Preprocessing.py']
+recent_files = ['Preprocessing\\visual_inspect_epoch.py', 'Preprocessing\\Preprocessing.py', 'CNN\\stft.py', 'Preprocessing\\visual_inspection.py', 'Preprocessing\\plot.py']
 
 [main]
 version = 0.2.0
