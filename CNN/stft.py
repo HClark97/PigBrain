@@ -23,11 +23,10 @@ stft_dic=copy.deepcopy(data)
 
 'Definitions'
 fs = 6103.515625
-cutoff = 500
 groupname = ['NonnoxERP','NoxERP']
 
 'STFT definitions'
-
+cutoff = 500
 nperseg = 700
 w = 'hann'
 
