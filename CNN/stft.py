@@ -23,8 +23,12 @@ stft_dic=copy.deepcopy(data)
 
 'Definitions'
 fs = 6103.515625
-n_fft = 256
 groupname = ['NonnoxERP','NoxERP']
+
+'STFT definitions'
+cutoff = 500
+nperseg = 700
+w = 'hann'
 
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
@@ -41,7 +45,10 @@ for group in range (len(groupname)): #2: nox and nonNox
                             stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                         
                             'Calculate STFT'
-                            f, t, Zxx = signal.stft(stim, fs)
+                            f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
+                            cutindex= round(cutoff/(fs/2)*len(Zxx))
+                            Zxx = Zxx[0:cutindex,:] # Keep up til 500 Hz
+                            f = f[0:cutindex]
                             Zxx = np.abs(Zxx)
                             Zxx = Zxx/np.max(Zxx)
                             
@@ -50,13 +57,13 @@ for group in range (len(groupname)): #2: nox and nonNox
                             
                             stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                                                         
-                            'Plot colormap'
+                            # 'Plot colormap'
                             plt.figure()
                             plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
                             plt.xlabel('Time [sec]', fontweight='bold')
                             plt.ylabel('Frequency [Hz]', fontweight='bold')    
                             plt.colorbar()
-                            plt.ylim(0,300)
+                            # plt.ylim(0,300)
 
 
 #savemat("stft_tensor.mat", stft_dic)
