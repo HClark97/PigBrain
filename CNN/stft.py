@@ -57,12 +57,12 @@ for group in range (len(groupname)): #2: nox and nonNox
                             
                             stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                                                         
-                            # 'Plot colormap'
-                            plt.figure()
-                            plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
-                            plt.xlabel('Time [sec]', fontweight='bold')
-                            plt.ylabel('Frequency [Hz]', fontweight='bold')    
-                            plt.colorbar()
+                            'Plot colormap'
+                            # plt.figure()
+                            # plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
+                            # plt.xlabel('Time [sec]', fontweight='bold')
+                            # plt.ylabel('Frequency [Hz]', fontweight='bold')    
+                            # plt.colorbar()
                             # plt.ylim(0,300)
 
 
