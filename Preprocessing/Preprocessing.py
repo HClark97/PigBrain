@@ -59,6 +59,9 @@ for group in range (len(groupname)): #2: nox and nonNox
                         data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch] = filtered_data
                     
 #savemat("preprocessed_data.mat", data) 
-
-    
-
+# 'count number of removed channels'
+# total_removed = 0
+# for i in range(1,len(noisy_channels)+1):
+#     for sets in range(np.size(noisy_channels[1])):
+#         total_removed = total_removed + np.size(noisy_channels[i][sets])
+#         print(np.size(noisy_channels[i][sets]))
