@@ -46,7 +46,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                         
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
-                            cutindex= round(cutoff/(fs/2)*len(Zxx))
+                            cutindex = round(cutoff/(fs/2)*len(Zxx))
                             Zxx = Zxx[0:cutindex,:] # Keep up til 500 Hz
                             f = f[0:cutindex]
                             Zxx = np.abs(Zxx)

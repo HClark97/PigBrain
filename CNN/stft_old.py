@@ -20,7 +20,7 @@ if not 'data' in globals():
 'Definitions'
 fs = 6103.515625
 cutoff = 500
-nperseg = 700
+nperseg = 350
 w = 'hann'
 
 for i in range(5):
