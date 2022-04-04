@@ -23,9 +23,10 @@ cutoff = 500
 nperseg = 350
 w = 'hann'
 
-for i in range(5):
-    stim=data['NoxERP']['block'][5]['channel'][0]['ERPs'][:,i]
+for i in range(1):
+    stim=data['NoxERP']['block'][45]['channel'][15]['ERPs'][:,0]
     
+    #stim = np.mean(data['NoxERP']['block'][45]['channel'][15]['ERPs'],axis = 1)
     'Turn stim into tensor'
     # stim_tensor=nn.tensor(stim)
     
@@ -50,8 +51,11 @@ for i in range(5):
     # py_f = np.arange(0,len(stft))*float(fs/2)/len(stft)
     
     'Plot colormap' 
-    plt.figure()
-    plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
+    fig = plt.figure()
+    #plt.figure()
+    #plt.axvline(x=0.05,color = 'green')
+    plt.pcolormesh((t-0.05), f, Zxx, cmap=cm.plasma) #Vi ændre t, så stimulationen sker i 0.0
     plt.xlabel('Time [sec]', fontweight='bold')
     plt.ylabel('Frequency [Hz]', fontweight='bold')    
     plt.colorbar()
+    #fig.savefig('{}.eps'.format('nox_stft'),format='eps')
