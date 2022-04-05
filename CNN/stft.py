@@ -77,8 +77,13 @@ for group in range (len(groupname)): #2: nox and nonNox
                 for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
                               tempdata  = np.asarray(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][epoch])
-
-
+                              if 0 <= sets <=5:
+                                  val_data = np.asarray(data[groupname[group]]['block'][0]['channel'][0]['ERPs'][epoch])
+                              if 9 <= sets <=11:
+                                  test_data = np.asarray(data[groupname[group]]['block'][0]['channel'][0]['ERPs'][epoch])
+                              else 
+                                  train_data = np.asarray(data[groupname[group]]['block'][0]['channel'][0]['ERPs'][epoch])
+                                  
 mpu.io.write('STFT.pickle', stft_dic)
 
 # unserialized_data = mpu.io.read('filename.pickle')
