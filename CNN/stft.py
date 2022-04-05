@@ -76,8 +76,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                 stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
                 for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
-                        stft = stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][epoch]
-
+                              tempdata  = np.asarray(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][epoch])
 
 
 mpu.io.write('STFT.pickle', stft_dic)

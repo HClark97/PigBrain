@@ -13,8 +13,6 @@ import torch.optim as optim
 import torch
 import h5py
 import matplotlib as plt
-import plyer as 
-import mpu
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -23,14 +21,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 batch_size = 32
 epochs = 5
 
-'''### Data generator ###'''
-path=pl.filechooser.open_file()
-data = mpu.io.read(path[0])
-
-
 '''### Data ###'''
-
-train_dataset = data
+train_dataset = MNIST('/files/', train=True, download=True, transform=ToTensor())
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
 val_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
