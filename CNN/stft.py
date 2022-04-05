@@ -14,6 +14,7 @@ import scipy
 from scipy import signal
 from scipy.io import savemat
 import copy
+import mpu
 
 'Load data'
 if not 'data' in globals():
@@ -66,5 +67,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                             # plt.ylim(0,300)
 
 
-#savemat("stft_tensor.mat", stft_dic)
+mpu.io.write('STFT.pickle', stft_dic)
+
+# unserialized_data = mpu.io.read('filename.pickle')
+
 
