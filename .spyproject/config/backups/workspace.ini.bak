@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['CNN\\stft.py', '..\\ThinkingOfBanana\\Signalprocessing\\plotting\\colourmap.py', '..\\ThinkingOfBanana\\Signalprocessing\\plotting\\contour_plot.py', '..\\ThinkingOfBanana\\preprocessing_step1.py', '..\\ThinkingOfBanana\\preprocessing_step2.py', 'CNN\\stft_old.py']
+recent_files = ['CNN\\CNN.py', 'CNN\\stft.py', 'CNN\\test_fra_nettet.py', 'loader.py']
 
 [main]
 version = 0.2.0

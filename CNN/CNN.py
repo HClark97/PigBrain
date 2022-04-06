@@ -20,6 +20,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 '''### Hyperparameters ###'''
 batch_size = 32
 epochs = 5
+learning_rate = 0.001
 
 '''### Data ###'''
 train_dataset = MNIST('/files/', train=True, download=True, transform=ToTensor())

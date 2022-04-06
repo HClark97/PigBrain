@@ -23,7 +23,10 @@ if not 'data' in globals():
 
 stft_dic=copy.deepcopy(data)
 val_data_label = []
+val_data =  []
+test_data = []
 test_data_label = []
+train_data = []
 train_data_label = []
 
 'Definitions'
@@ -84,10 +87,10 @@ for group in range (len(groupname)): #2: nox and nonNox
                                   val_data.append(tempdata)
                                   val_data_label.append(group)
                               if 9 <= sets <=11:
-                                  test_data = append(tempdata)
+                                  test_data.append(tempdata)
                                   test_data_label.append(group)
                               else: 
-                                  train_data = append(tempdata)
+                                  train_data.append(tempdata)
                                   train_data_label.append(group)
                                   
                                   
@@ -100,4 +103,4 @@ mpu.io.write('traindataset.pickle', train_dataset)
 
 # unserialized_data = mpu.io.read('filename.pickle')
 
-
+# mpu.io.write('stft_dict.pickle', stft_dic)
