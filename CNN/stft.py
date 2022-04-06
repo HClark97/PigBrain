@@ -19,7 +19,7 @@ import mpu
 
 'Load data'
 if not 'data' in globals():
-    data=l.load_mat_file()
+    data=l.load_mat_file(1)
 
 stft_dic=copy.deepcopy(data)
 val_data_label = []
