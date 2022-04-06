@@ -21,7 +21,7 @@ import mpu
 if not 'data' in globals():
     data=l.load_mat_file(1)
 
-stft_dic=copy.deepcopy(data)
+# stft_dic=copy.deepcopy(data)
 val_data_label = []
 val_data =  []
 test_data = []
@@ -37,21 +37,21 @@ groupname = ['NonnoxERP','NoxERP']
 cutoff = 500
 nperseg = 700
 w = 'hann'
-
+i = 0
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
         print('Set '+ str(sets+1))
         for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
             if np.size(data['NonnoxERP']['block'][sets]['channel']):
-                stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
+                # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
                 #print('Deleted entry in channel '+ str(channel+1))
                 for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
                             stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
-                        
+                            i += 1
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -61,9 +61,17 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = Zxx/np.max(Zxx)
                             
                             'Transform to tensor'
-                            stft_tensor = nn.tensor(Zxx)
-                            
-                            stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
+                            tempdata = nn.tensor(Zxx)
+                            if 0 <= sets <=5:
+                                val_data.append(tempdata)
+                                val_data_label.append(group)
+                            if 9 <= sets <=11:
+                                test_data.append(tempdata)
+                                test_data_label.append(group)
+                            if 12 <= sets <= 47: 
+                                train_data.append(tempdata)
+                                train_data_label.append(group)
+                            # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                                                         
                             'Plot colormap'
                             # plt.figure()
@@ -73,27 +81,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                             # plt.colorbar()
                             # plt.ylim(0,300)
                             
-
-for group in range (len(groupname)): #2: nox and nonNox
-    for sets in range(len(data['NonnoxERP']['block'])): #48 
-        print('Set '+ str(sets+1))
-        for channel in range(len(data['NonnoxERP']['block'][0]['channel'])): #32
-            if np.size(data['NonnoxERP']['block'][sets]['channel']):
-                stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
-                for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
-                        if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
-                              tempdata  = np.asarray(stft_dic['NonnoxERP']['block'][sets]['channel'][channel]['ERPs'][0])
-                              if 0 <= sets <=5:
-                                  val_data.append(tempdata)
-                                  val_data_label.append(group)
-                              if 9 <= sets <=11:
-                                  test_data.append(tempdata)
-                                  test_data_label.append(group)
-                              else: 
-                                  train_data.append(tempdata)
-                                  train_data_label.append(group)
-                                  
-                                  
+print(i)
+                                 
 val_dataset = [val_data, val_data_label]  
 test_dataset = [test_data, test_data_label] 
 train_dataset = [train_data, train_data_label]     
