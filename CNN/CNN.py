@@ -20,7 +20,6 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 '''### Hyperparameters ###'''
 batch_size = 32
 epochs = 5
-learning_rate = 0.001
 
 '''### Data ###'''
 train_dataset = MNIST('/files/', train=True, download=True, transform=ToTensor())
@@ -61,7 +60,7 @@ model = ConvNet().to(device)
 ### Define the optimizer
 optimizer = optim.Adam(model.parameters())
 ### Define the loss function
-criterion = nn.CrossEntropyLoss()
+criterion = nn.BCELoss()
 
 '''### Training ###'''
 train_loss_history = list()
@@ -129,7 +128,6 @@ plt.show()
 '''### Testing model ###'''
 model = ConvNet().to(device)
 model.load_state_dict(torch.load("Filename"))
-model.eval()
 n_correct = 0
 n_samples = 0
 with torch.no_grad():
