@@ -6,6 +6,7 @@ Created on Mon Mar 21 10:54:19 2022
 """
 
 from torch.utils.data import DataLoader
+from torch.utils.data import Dataset
 from torchvision.transforms import ToTensor
 import torch.nn as nn
 import torch.nn.functional as F
@@ -13,6 +14,8 @@ import torch.optim as optim
 import torch
 import h5py
 import matplotlib as plt
+import mpu
+import plyer as pl
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -22,14 +25,15 @@ batch_size = 32
 epochs = 5
 
 '''### Data ###'''
-train_dataset = MNIST('/files/', train=True, download=True, transform=ToTensor())
+path = pl.filechooser.open_file()
+train_dataset = Dataset(mpu.io.read('traindataset.pickle'),transform=ToTensor())
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-val_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
+val_dataset = mpu.io.read('valdataset.pickle')
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
-test_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
-test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+# test_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
+# test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
 
 '''### Model definition ###'''
@@ -95,13 +99,13 @@ for epoch in range(epochs):
 
 
 ### Save model
-torch.save(model.state_dict(), FILEPATH)
+# torch.save(model.state_dict(), FILEPATH)
 
 
 
 '''### Validation model ###'''
 model = ConvNet().to(device)
-model.load_state_dict(torch.load("Filename"))
+# model.load_state_dict(torch.load("Filename"))
 model.eval() 
 val_loss_history = list()
 for epoch in range(epochs):
@@ -125,19 +129,19 @@ plt.show()
 
 
 
-'''### Testing model ###'''
-model = ConvNet().to(device)
-model.load_state_dict(torch.load("Filename"))
-n_correct = 0
-n_samples = 0
-with torch.no_grad():
-    for images, labels in  enumerate(test_loader):
-        images = images.to(device)
-        labels = labels.to(device)
-        outputs = model(images)
-        # max returns (value ,index)
-        _, predicted = torch.max(outputs, 1)
-        n_samples += labels.size(0)
-        n_correct += (predicted == labels).sum().item()
-    accuracy = 100.0 * n_correct / n_samples
-    print(f'Accuracy of the network: {accuracy} %')
+# '''### Testing model ###'''
+# model = ConvNet().to(device)
+# model.load_state_dict(torch.load("Filename"))
+# n_correct = 0
+# n_samples = 0
+# with torch.no_grad():
+#     for images, labels in  enumerate(test_loader):
+#         images = images.to(device)
+#         labels = labels.to(device)
+#         outputs = model(images)
+#         # max returns (value ,index)
+#         _, predicted = torch.max(outputs, 1)
+#         n_samples += labels.size(0)
+#         n_correct += (predicted == labels).sum().item()
+#     accuracy = 100.0 * n_correct / n_samples
+#     print(f'Accuracy of the network: {accuracy} %')
