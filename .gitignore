@@ -61,3 +61,4 @@ __pycache__/loader.cpython-39.pyc
 .spyproject/config/backups/workspace.ini.bak
 .spyproject/config/workspace.ini
 *.bak
+.spyproject/config/workspace.ini
