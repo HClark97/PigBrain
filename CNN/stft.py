@@ -64,13 +64,13 @@ for group in range (len(groupname)): #2: nox and nonNox
                             tempdata = nn.tensor(Zxx)
                             if 0 <= sets <=5:
                                 val_data.append(tempdata)
-                                val_data_label.append(group)
+                                val_data_label.append(nn.tensor(group))
                             if 9 <= sets <=11:
                                 test_data.append(tempdata)
-                                test_data_label.append(group)
+                                test_data_label.append(nn.tensor(group))
                             if 12 <= sets <= 47: 
                                 train_data.append(tempdata)
-                                train_data_label.append(group)
+                                train_data_label.append(nn.tensor(group))
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                                                         
                             'Plot colormap'
