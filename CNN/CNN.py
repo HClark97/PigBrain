@@ -25,7 +25,10 @@ batch_size = 32
 epochs = 5
 
 '''### Data ###'''
-path = pl.filechooser.open_file()
+if str(pl.utils.platform) == 'macosx':
+    path=list(['/Users/amaliekoch/Dropbox (Personlig)/Aalborg universitet/8. semester/Projekt/preprocessed_data'])
+else:
+    path = pl.filechooser.open_file()
 train_dataset = Dataset(mpu.io.read('traindataset.pickle'),transform=ToTensor())
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 

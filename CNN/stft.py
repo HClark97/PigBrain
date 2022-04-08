@@ -35,7 +35,7 @@ groupname = ['NonnoxERP','NoxERP']
 
 'STFT definitions'
 cutoff = 500
-nperseg = 700
+nperseg = 350
 w = 'hann'
 i = 0
 'Open up data'
@@ -93,3 +93,5 @@ mpu.io.write('traindataset.pickle', train_dataset)
 # unserialized_data = mpu.io.read('filename.pickle')
 
 # mpu.io.write('stft_dict.pickle', stft_dic)
+#import os
+#os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"

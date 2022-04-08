@@ -20,13 +20,13 @@ if not 'data' in globals():
 'Definitions'
 fs = 6103.515625
 cutoff = 500
-nperseg = 350
+nperseg = 175
 w = 'hann'
 
 for i in range(1):
-    stim=data['NoxERP']['block'][45]['channel'][15]['ERPs'][:,0]
+    #stim=data['NoxERP']['block'][45]['channel'][15]['ERPs'][:,0]
     
-    #stim = np.mean(data['NoxERP']['block'][45]['channel'][15]['ERPs'],axis = 1)
+    stim = np.mean(data['NoxERP']['block'][45]['channel'][15]['ERPs'],axis = 1)
     'Turn stim into tensor'
     # stim_tensor=nn.tensor(stim)
     
