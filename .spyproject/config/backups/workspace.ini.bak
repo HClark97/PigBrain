@@ -8,5 +8,5 @@ recent_files = ['CNN/stft.py', 'CNN/stft_old.py', 'CNN/CNN.py', 'Preprocessing/P
 
 [main]
 version = 0.2.0
-recent_files = []
+recent_files = ['CNN\\CNN.py', 'CNN\\stft.py']
 

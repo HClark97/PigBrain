@@ -7,6 +7,7 @@ Created on Mon Mar 21 10:54:19 2022
 
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
+from torch.utils.data import ConcatDataset
 from torchvision.transforms import ToTensor
 import torch.nn as nn
 import torch.nn.functional as F
@@ -26,11 +27,20 @@ epochs = 5
 
 '''### Data ###'''
 path = pl.filechooser.open_file()
-train_dataset = Dataset(mpu.io.read('traindataset.pickle'),transform=ToTensor())
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+nox_dataset = mpu.io.read('nox.pickle')
+path = pl.filechooser.open_file()
+nonnox_dataset = mpu.io.read('nonnox.pickle')
+train_dataset = [nox_dataset, nonnox_dataset]
+KongeKat = ConcatDataset(train_dataset)
+train_loader = DataLoader(KongeKat, batch_size=batch_size, shuffle=True)
 
-val_dataset = mpu.io.read('valdataset.pickle')
-val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
+path = pl.filechooser.open_file()
+nox_dataset = mpu.io.read('nox.pickle')
+path = pl.filechooser.open_file()
+nonnox_dataset = mpu.io.read('nonnox.pickle')
+val_dataset = [nox_dataset, nonnox_dataset]
+KongeHund = ConcatDataset(val_dataset)
+val_loader = DataLoader(KongeHund, batch_size=batch_size, shuffle=True)
 
 # test_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
 # test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
