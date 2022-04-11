@@ -15,7 +15,7 @@ from scipy import signal
 from scipy.io import savemat
 import copy
 import mpu
-
+import os
 
 'Load data'
 if not 'data' in globals():
@@ -64,24 +64,24 @@ for group in range (len(groupname)): #2: nox and nonNox
                             tempdata = torch.tensor(Zxx)
                             if 0 <= sets <=5:
                                 if group == 1:
-                                    path = r'C:\Users\clark\Desktop\STFT\Val\Nox'
+                                    os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
                                     torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
                                 else:
-                                    path = r'C:\Users\clark\Desktop\STFT\Val\NonNox'
+                                    os.chdir(r'C:\Users\clark\Desktop\STFT\Val\NonNox')
                                     torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
                             if 9 <= sets <=11:
                                 if group == 1:
-                                    path = r'C:\Users\clark\Desktop\STFT\Test\Nox'
+                                    os.chdir(r'C:\Users\clark\Desktop\STFT\Test\Nox')
                                     torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
                                 else:
-                                    path = r'C:\Users\clark\Desktop\STFT\Test\NonNox'
+                                    os.chdir(r'C:\Users\clark\Desktop\STFT\Test\NonNox')
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
                             if 12 <= sets <= 47: 
                                 if group == 1:
-                                    path = r'C:\Users\clark\Desktop\STFT\Train\Nox'
+                                    os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
                                     torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
                                 else:
-                                    path = r'C:\Users\clark\Desktop\STFT\Train\NonNox'
+                                    os.chdir(r'C:\Users\clark\Desktop\STFT\Train\NonNox')
                                     torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                             i +=1                          

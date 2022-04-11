@@ -26,33 +26,29 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 batch_size = 32
 epochs = 5
 
+
 '''### Data ###'''
+def torch_loader(path):
+    sample = torch.load(path)
+    return sample
+
 path = pl.filechooser.choose_dir()
-#nox_dataset = torch.load('nox.pt')
+train_data = torchvision.datasets.DatasetFolder(root=path[0],
+                                                loader=torch_loader,
+                                                extensions=['.pt']
+                                                )
 
-train_data = torchvision.datasets.DatasetFolder(root=path[0],loader='torch.load')
-
-# path = pl.filechooser.choose_dir()
-# nonnox_dataset = torch.load('nonnox.pt')
-
-# path = pl.filechooser.open_file()
-# nox_dataset = mpu.io.read('nox.pickle')
-# path = pl.filechooser.open_file()
-# nonnox_dataset = mpu.io.read('nonnox.pickle')
-# train_dataset = [nox_dataset, nonnox_dataset]
-#KongeKat = ConcatDataset(train_dataset)
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
-# path = pl.filechooser.open_file()
-# nox_dataset = mpu.io.read('nox.pickle')
-# path = pl.filechooser.open_file()
-# nonnox_dataset = mpu.io.read('nonnox.pickle')
-# val_dataset = [nox_dataset, nonnox_dataset]
-# KongeHund = ConcatDataset(val_dataset)
-# val_loader = DataLoader(KongeHund, batch_size=batch_size, shuffle=True)
 
-# test_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
-# test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+path = pl.filechooser.choose_dir()
+val_data = torchvision.datasets.DatasetFolder(root=path[0],
+                                                loader=torch_loader,
+                                                extensions=['.pt']
+                                                )
+
+val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
+
 
 
 '''### Model definition ###'''
@@ -60,8 +56,8 @@ train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, padding=2)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=3, padding=2)
+        self.conv2 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=2)
         self.pool = nn.MaxPool2d(2, 2)
         self.fc1 = nn.Linear(in_features=16 * 5 * 5, out_features=120)
         self.fc2 = nn.Linear(in_features=120, out_features=84)
