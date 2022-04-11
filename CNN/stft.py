@@ -22,12 +22,12 @@ if not 'data' in globals():
     data=l.load_mat_file(1)
 
 # stft_dic=copy.deepcopy(data)
-val_data_label = []
-val_data =  []
-test_data = []
-test_data_label = []
-train_data = []
-train_data_label = []
+val_nonnox_data = []
+val_nox_data =  []
+train_nonnox_data = []
+train_nox_data =  []
+test_nonnox_data = []
+test_nox_data =  []
 
 'Definitions'
 fs = 6103.515625
@@ -63,14 +63,20 @@ for group in range (len(groupname)): #2: nox and nonNox
                             'Transform to tensor'
                             tempdata = nn.tensor(Zxx)
                             if 0 <= sets <=5:
-                                val_data.append(tempdata)
-                                val_data_label.append(nn.tensor(group))
+                                if group == 1:
+                                    val_nox_data.append(tempdata)
+                                else:
+                                    val_nonnox_data.append(tempdata)
                             if 9 <= sets <=11:
-                                test_data.append(tempdata)
-                                test_data_label.append(nn.tensor(group))
+                                if group == 1:
+                                    test_nox_data.append(tempdata)
+                                else:
+                                    test_nonnox_data.append(tempdata)
                             if 12 <= sets <= 47: 
-                                train_data.append(tempdata)
-                                train_data_label.append(nn.tensor(group))
+                                if group == 1:
+                                    train_nox_data.append(tempdata)
+                                else:
+                                    train_nonnox_data.append(tempdata)
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                                                         
                             'Plot colormap'
@@ -83,15 +89,14 @@ for group in range (len(groupname)): #2: nox and nonNox
                             
 print(i)
                                  
-val_dataset = [val_data, val_data_label]  
-test_dataset = [test_data, test_data_label] 
-train_dataset = [train_data, train_data_label]     
-mpu.io.write('valdataset.pickle', val_dataset)
-mpu.io.write('testdataset.pickle', test_dataset)
-mpu.io.write('traindataset.pickle', train_dataset)
+   
+mpu.io.write('val_nox.pickle', val_nox_data)
+mpu.io.write('val_nonnox.pickle', val_nonnox_data)
+mpu.io.write('train_nox.pickle', train_nox_data)
+mpu.io.write('train_nonnox.pickle', train_nonnox_data)
+mpu.io.write('test_nox.pickle', test_nox_data)
+mpu.io.write('test_nonnox.pickle', test_nonnox_data)
 
 # unserialized_data = mpu.io.read('filename.pickle')
 
 # mpu.io.write('stft_dict.pickle', stft_dic)
-#import os
-#os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
