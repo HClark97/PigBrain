@@ -5,7 +5,7 @@ Created on Tue Mar 29 12:40:55 2022
 @author: nicko
 """
 
-import torch as nn
+import torch
 import loader as l
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -51,7 +51,7 @@ for group in range (len(groupname)): #2: nox and nonNox
     
                             'Get epoch'
                             stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
-                            i += 1
+                            
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -61,24 +61,30 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = Zxx/np.max(Zxx)
                             
                             'Transform to tensor'
-                            tempdata = nn.tensor(Zxx)
+                            tempdata = torch.tensor(Zxx)
                             if 0 <= sets <=5:
                                 if group == 1:
-                                    val_nox_data.append(tempdata)
+                                    path = r'C:\Users\clark\Desktop\STFT\Val\Nox'
+                                    torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
                                 else:
-                                    val_nonnox_data.append(tempdata)
+                                    path = r'C:\Users\clark\Desktop\STFT\Val\NonNox'
+                                    torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
                             if 9 <= sets <=11:
                                 if group == 1:
-                                    test_nox_data.append(tempdata)
+                                    path = r'C:\Users\clark\Desktop\STFT\Test\Nox'
+                                    torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
                                 else:
-                                    test_nonnox_data.append(tempdata)
+                                    path = r'C:\Users\clark\Desktop\STFT\Test\NonNox'
+                                    torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
                             if 12 <= sets <= 47: 
                                 if group == 1:
-                                    train_nox_data.append(tempdata)
+                                    path = r'C:\Users\clark\Desktop\STFT\Train\Nox'
+                                    torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
                                 else:
-                                    train_nonnox_data.append(tempdata)
+                                    path = r'C:\Users\clark\Desktop\STFT\Train\NonNox'
+                                    torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
-                                                        
+                            i +=1                          
                             'Plot colormap'
                             # plt.figure()
                             # plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
@@ -87,15 +93,20 @@ for group in range (len(groupname)): #2: nox and nonNox
                             # plt.colorbar()
                             # plt.ylim(0,300)
                             
-print(i)
                                  
-   
-mpu.io.write('val_nox.pickle', val_nox_data)
-mpu.io.write('val_nonnox.pickle', val_nonnox_data)
-mpu.io.write('train_nox.pickle', train_nox_data)
-mpu.io.write('train_nonnox.pickle', train_nonnox_data)
-mpu.io.write('test_nox.pickle', test_nox_data)
-mpu.io.write('test_nonnox.pickle', test_nonnox_data)
+# torch.save(val_nox_data,'val_nox.pt')
+# torch.save(val_nonnox_data,'val_nonnox.pt')
+# torch.save(train_nox_data,'train_nox.pt')
+# torch.save(train_nonnox_data,'train_nonnox.pt')
+# torch.save(test_nox_data,'test_nox.pt')
+# torch.save(test_nonnox_data,'test_nonnox.pt')
+
+# mpu.io.write('val_nox.pickle', val_nox_data)
+# mpu.io.write('val_nonnox.pickle', val_nonnox_data)
+# mpu.io.write('train_nox.pickle', train_nox_data)
+# mpu.io.write('train_nonnox.pickle', train_nonnox_data)
+# mpu.io.write('test_nox.pickle', test_nox_data)
+# mpu.io.write('test_nonnox.pickle', test_nonnox_data)
 
 # unserialized_data = mpu.io.read('filename.pickle')
 

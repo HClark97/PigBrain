@@ -17,6 +17,7 @@ import h5py
 import matplotlib as plt
 import mpu
 import plyer as pl
+import torchvision
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -26,21 +27,29 @@ batch_size = 32
 epochs = 5
 
 '''### Data ###'''
-path = pl.filechooser.open_file()
-nox_dataset = mpu.io.read('nox.pickle')
-path = pl.filechooser.open_file()
-nonnox_dataset = mpu.io.read('nonnox.pickle')
-train_dataset = [nox_dataset, nonnox_dataset]
-KongeKat = ConcatDataset(train_dataset)
-train_loader = DataLoader(KongeKat, batch_size=batch_size, shuffle=True)
+path = pl.filechooser.choose_dir()
+#nox_dataset = torch.load('nox.pt')
 
-path = pl.filechooser.open_file()
-nox_dataset = mpu.io.read('nox.pickle')
-path = pl.filechooser.open_file()
-nonnox_dataset = mpu.io.read('nonnox.pickle')
-val_dataset = [nox_dataset, nonnox_dataset]
-KongeHund = ConcatDataset(val_dataset)
-val_loader = DataLoader(KongeHund, batch_size=batch_size, shuffle=True)
+train_data = torchvision.datasets.DatasetFolder(root=path[0],loader='torch.load')
+
+# path = pl.filechooser.choose_dir()
+# nonnox_dataset = torch.load('nonnox.pt')
+
+# path = pl.filechooser.open_file()
+# nox_dataset = mpu.io.read('nox.pickle')
+# path = pl.filechooser.open_file()
+# nonnox_dataset = mpu.io.read('nonnox.pickle')
+# train_dataset = [nox_dataset, nonnox_dataset]
+#KongeKat = ConcatDataset(train_dataset)
+train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+
+# path = pl.filechooser.open_file()
+# nox_dataset = mpu.io.read('nox.pickle')
+# path = pl.filechooser.open_file()
+# nonnox_dataset = mpu.io.read('nonnox.pickle')
+# val_dataset = [nox_dataset, nonnox_dataset]
+# KongeHund = ConcatDataset(val_dataset)
+# val_loader = DataLoader(KongeHund, batch_size=batch_size, shuffle=True)
 
 # test_dataset = MNIST('/files/', train=False, download=True, transform=ToTensor())
 # test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
