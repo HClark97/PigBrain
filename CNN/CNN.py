@@ -35,7 +35,7 @@ def torch_loader(path):
 path = pl.filechooser.choose_dir()
 train_data = torchvision.datasets.DatasetFolder(root=path[0],
                                                 loader=torch_loader,
-                                                extensions=['.pt']
+                                                extensions=['.pt'],
                                                 )
 
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
@@ -56,17 +56,17 @@ val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=3, padding=2)
-        self.conv2 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=2)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=3)
+        self.conv2 = nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3)
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(in_features=16 * 5 * 5, out_features=120)
-        self.fc2 = nn.Linear(in_features=120, out_features=84)
-        self.fc3 = nn.Linear(in_features=84, out_features=10)
+        self.fc1 = nn.Linear(in_features=7680, out_features=144)
+        self.fc2 = nn.Linear(in_features=144, out_features=72)
+        self.fc3 = nn.Linear(in_features=72, out_features=2)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))  # -> n, 6, 14, 14
         x = self.pool(F.relu(self.conv2(x)))  # -> n, 16, 5, 5
-        x = x.view(-1, 16 * 5 * 5)            # -> n, 400
+        x = x.view(-1, 7680)            # -> n, 400
         x = F.relu(self.fc1(x))               # -> n, 120
         x = F.relu(self.fc2(x))               # -> n, 84
         x = F.dropout(x, p=0.5, training=self.training)
@@ -90,6 +90,7 @@ for epoch in range(epochs):
     ### Run through batches
     train_loss = 0.0
     for i, (imgs, labels) in enumerate(train_loader):
+        imgs, labels = imgs.to(device), labels.to(device)
         ### Zero the gradients of the network
         optimizer.zero_grad()
         ### Run the batch through the model to get the predictions
@@ -126,6 +127,7 @@ val_loss_history = list()
 for epoch in range(epochs):
     val_loss = 0.0
     for i, (imgs, labels) in enumerate(val_loader):
+        imgs, labels = imgs.to(device), labels.to(device)
         prediction = model(imgs)
         val_loss += criterion(prediction, labels).item()
         
