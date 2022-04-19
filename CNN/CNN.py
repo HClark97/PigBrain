@@ -60,8 +60,8 @@ class ConvNet(nn.Module):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1)
-        self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1)
-        self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2)
+        self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
+        self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
         self.fc1 = nn.Linear(in_features=8960, out_features=144)
         self.fc2 = nn.Linear(in_features=144, out_features=72)
         self.fc3 = nn.Linear(in_features=72, out_features=2)
@@ -95,7 +95,7 @@ for epoch in range(epochs):
     train_loss = 0.0
     for i, (imgs, labels) in enumerate(train_loader):
         imgs, labels = imgs.to(device), labels.to(device)
-        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32)
+        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding, so we got a 32,2 matrix (Alex said this is how it is done)
         ### Zero the gradients of the network
         optimizer.zero_grad()
         ### Run the batch through the model to get the predictions
@@ -113,7 +113,10 @@ for epoch in range(epochs):
         ### Print Epoch, batch and loss
         if i % minibatch == minibatch-1:  # print every 40 batches
             print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
-                  epoch + 1, i + 1, len(train_loader), train_loss / minibatch*batch_size)) #fix denne algoritme, den virker ikke korrekt
+                epoch + 1, 
+                i + 1, 
+                len(train_loader), 
+                train_loss / (i*batch_size))) #fix denne algoritme, den virker ikke korrekt
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
@@ -133,7 +136,7 @@ for epoch in range(epochs):
     val_loss = 0.0
     for i, (imgs, labels) in enumerate(val_loader):
         imgs, labels = imgs.to(device), labels.to(device)
-        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32)
+        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
         prediction = model(imgs)
         val_loss += criterion(prediction, labels).item()
         
@@ -150,6 +153,8 @@ plt.xlabel('Epoch')
 plt.legend()
 plt.show()
 
+#import os
+#os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 
 # '''### Testing model ###'''
