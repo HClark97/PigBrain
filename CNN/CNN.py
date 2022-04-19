@@ -14,16 +14,18 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch
 import h5py
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import mpu
 import plyer as pl
 import torchvision
+import numpy as np
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 '''### Hyperparameters ###'''
 batch_size = 32
+minibatch = 40
 epochs = 5
 
 
@@ -56,30 +58,32 @@ val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=3)
-        self.conv2 = nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(in_features=7680, out_features=144)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1)
+        self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1)
+        self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2)
+        self.fc1 = nn.Linear(in_features=8960, out_features=144)
         self.fc2 = nn.Linear(in_features=144, out_features=72)
         self.fc3 = nn.Linear(in_features=72, out_features=2)
+        
 
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))  # -> n, 6, 14, 14
-        x = self.pool(F.relu(self.conv2(x)))  # -> n, 16, 5, 5
-        x = x.view(-1, 7680)            # -> n, 400
+        x = self.pool1(F.relu(self.conv1(x)))  # -> n, 6, 14, 14
+        x = self.pool2(F.relu(self.conv2(x)))  # -> n, 16, 5, 5
+        x = x.view(-1, 8960)            # -> n, 400
         x = F.relu(self.fc1(x))               # -> n, 120
         x = F.relu(self.fc2(x))               # -> n, 84
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.fc3(x)                       # -> n, 10
-        
+         
         return x
     
 ### Instantiate the network
 model = ConvNet().to(device)
 ### Define the optimizer
-optimizer = optim.Adam(model.parameters())
+optimizer = optim.NAdam(model.parameters())
 ### Define the loss function
-criterion = nn.BCELoss()
+criterion = nn.BCEWithLogitsLoss()
 
 '''### Training ###'''
 train_loss_history = list()
@@ -91,6 +95,7 @@ for epoch in range(epochs):
     train_loss = 0.0
     for i, (imgs, labels) in enumerate(train_loader):
         imgs, labels = imgs.to(device), labels.to(device)
+        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32)
         ### Zero the gradients of the network
         optimizer.zero_grad()
         ### Run the batch through the model to get the predictions
@@ -106,9 +111,9 @@ for epoch in range(epochs):
         train_loss += loss.item()
         
         ### Print Epoch, batch and loss
-        if i % 40 == 39:  # print every 2000 mini-batches
+        if i % minibatch == minibatch-1:  # print every 40 batches
             print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
-                  epoch + 1, i + 1, len(train_loader), train_loss / 2000))
+                  epoch + 1, i + 1, len(train_loader), train_loss / minibatch*batch_size)) #fix denne algoritme, den virker ikke korrekt
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
@@ -128,6 +133,7 @@ for epoch in range(epochs):
     val_loss = 0.0
     for i, (imgs, labels) in enumerate(val_loader):
         imgs, labels = imgs.to(device), labels.to(device)
+        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32)
         prediction = model(imgs)
         val_loss += criterion(prediction, labels).item()
         
