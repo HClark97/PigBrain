@@ -5,7 +5,7 @@ Created on Tue Mar 29 12:40:55 2022
 @author: nicko
 """
 
-import torch as nn
+import torch
 import loader as l
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -15,27 +15,26 @@ from scipy import signal
 from scipy.io import savemat
 import copy
 import mpu
-
+import os
 
 'Load data'
 if not 'data' in globals():
     data=l.load_mat_file(1)
 
 # stft_dic=copy.deepcopy(data)
-val_data_label = []
-val_data =  []
-test_data = []
-test_data_label = []
-train_data = []
-train_data_label = []
-
+val_nonnox_data = []
+val_nox_data =  []
+train_nonnox_data = []
+train_nox_data =  []
+test_nonnox_data = []
+test_nox_data =  []
+person = 'mikkel'
 'Definitions'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
-
 'STFT definitions'
 cutoff = 500
-nperseg = 700
+nperseg = 350
 w = 'hann'
 i = 0
 'Open up data'
@@ -51,7 +50,7 @@ for group in range (len(groupname)): #2: nox and nonNox
     
                             'Get epoch'
                             stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
-                            i += 1
+                            
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -61,18 +60,51 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = Zxx/np.max(Zxx)
                             
                             'Transform to tensor'
-                            tempdata = nn.tensor(Zxx)
+                            tempdata = torch.tensor(Zxx)
+                            tempdata = torch.unsqueeze(tempdata,0)
                             if 0 <= sets <=5:
-                                val_data.append(tempdata)
-                                val_data_label.append(group)
+                                if group == 1:
+                                    if person == 'hjalte':
+                                        os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
+                                    if person == 'mikkel':
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\val\Nox')
+                                    torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
+                                else:
+                                    if person == 'hjalte':
+                                        os.chdir(r'C:\Users\clark\Desktop\STFT\Val\NonNox')
+                                    if person == 'mikkel':
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\val\Nonnox')
+                                    torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
                             if 9 <= sets <=11:
-                                test_data.append(tempdata)
-                                test_data_label.append(group)
+                                if group == 1:
+                                    if person == 'hjalte':
+                                        os.chdir(r'C:\Users\clark\Desktop\STFT\Test\Nox')
+                                    if person =='mikkel':
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Test\Nox')
+                                    torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
+                                else:
+                                    if person == 'hjalte':
+                                        os.chdir(r'C:\Users\clark\Desktop\STFT\Test\NonNox')
+                                    if person == 'mikkel':
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Test\Nonnox')
+
+                                    torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
                             if 12 <= sets <= 47: 
-                                train_data.append(tempdata)
-                                train_data_label.append(group)
+                                if group == 1:
+                                    if person == 'hjalte':
+                                        os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
+                                    if person == 'mikkel':
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\Nox')
+                                    
+                                    torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
+                                else:
+                                    if person == 'hjalte':
+                                        os.chdir(r'C:\Users\clark\Desktop\STFT\Train\NonNox')
+                                    if person == 'mikkel':
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\NonNox')
+                                    torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
-                                                        
+                            i +=1                          
                             'Plot colormap'
                             # plt.figure()
                             # plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
@@ -81,14 +113,20 @@ for group in range (len(groupname)): #2: nox and nonNox
                             # plt.colorbar()
                             # plt.ylim(0,300)
                             
-print(i)
                                  
-val_dataset = [val_data, val_data_label]  
-test_dataset = [test_data, test_data_label] 
-train_dataset = [train_data, train_data_label]     
-mpu.io.write('valdataset.pickle', val_dataset)
-mpu.io.write('testdataset.pickle', test_dataset)
-mpu.io.write('traindataset.pickle', train_dataset)
+# torch.save(val_nox_data,'val_nox.pt')
+# torch.save(val_nonnox_data,'val_nonnox.pt')
+# torch.save(train_nox_data,'train_nox.pt')
+# torch.save(train_nonnox_data,'train_nonnox.pt')
+# torch.save(test_nox_data,'test_nox.pt')
+# torch.save(test_nonnox_data,'test_nonnox.pt')
+
+# mpu.io.write('val_nox.pickle', val_nox_data)
+# mpu.io.write('val_nonnox.pickle', val_nonnox_data)
+# mpu.io.write('train_nox.pickle', train_nox_data)
+# mpu.io.write('train_nonnox.pickle', train_nonnox_data)
+# mpu.io.write('test_nox.pickle', test_nox_data)
+# mpu.io.write('test_nonnox.pickle', test_nonnox_data)
 
 # unserialized_data = mpu.io.read('filename.pickle')
 
