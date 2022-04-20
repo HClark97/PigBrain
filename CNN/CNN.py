@@ -26,7 +26,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 '''### Hyperparameters ###'''
 batch_size = 32
 minibatch = 40
-epochs = 5
+epochs = 10
 
 
 '''### Data ###'''
@@ -87,12 +87,14 @@ criterion = nn.BCEWithLogitsLoss()
 
 '''### Training ###'''
 train_loss_history = list()
+val_loss_history = list()
 n_correct = 0
 n_samples = 0
 ### Run through epochs
 for epoch in range(epochs):
     ### Run through batches
     train_loss = 0.0
+    val_loss = 0.0
     for i, (imgs, labels) in enumerate(train_loader):
         labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding, so we got a 32,2 matrix (Alex said this is how it is done)
         imgs, labels = imgs.to(device), labels.to(device)
@@ -109,18 +111,29 @@ for epoch in range(epochs):
 
         ### Save losses
         train_loss += loss.item()
-        
-        ### Print Epoch, batch and loss
+                ### Print Epoch, batch and loss
         if i % minibatch == minibatch-1:  # print every 40 batches
             print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
                 epoch + 1, 
                 i + 1, 
                 len(train_loader), 
                 train_loss / (i*batch_size))) #fix denne algoritme, den virker ikke korrekt
+            
+    model.eval() 
+    for i, (imgs, labels) in enumerate(val_loader):
+        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
+        imgs, labels = imgs.to(device), labels.to(device)
+        prediction = model(imgs)
+        lossVal = criterion(prediction, labels)
+        val_loss += lossVal.item()
+            
+                                                          
+
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
-
+    val_loss = val_loss/len(val_loader)
+    val_loss_history.append(val_loss)
 
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
@@ -130,20 +143,22 @@ for epoch in range(epochs):
 '''### Validation model ###'''
 #model = ConvNet().to(device)
 # model.load_state_dict(torch.load("Filename"))
-model.eval() 
-val_loss_history = list()
-with torch.no_grad():
-    for epoch in range(epochs):
-        val_loss = 0.0
-        for i, (imgs, labels) in enumerate(val_loader):
-            labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
-            imgs, labels = imgs.to(device), labels.to(device)
-            prediction = model(imgs)
-            lossVal = criterion(prediction, labels)
-            val_loss += lossVal.item()
+
+# model.eval() 
+# val_loss_history = list()
+# with torch.no_grad():
+#     for epoch in range(epochs):
+#         val_loss = 0.0
+#         for i, (imgs, labels) in enumerate(val_loader):
+#             labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
+#             imgs, labels = imgs.to(device), labels.to(device)
+#             prediction = model(imgs)
+#             lossVal = criterion(prediction, labels)
+#             val_loss += lossVal.item()
         
-        val_loss = val_loss/len(val_loader)
-        val_loss_history.append(val_loss)
+        
+#         val_loss = val_loss/len(val_loader)
+#         val_loss_history.append(val_loss)
         
 
 '''### Plot test and validation model ###'''
