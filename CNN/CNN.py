@@ -94,8 +94,8 @@ for epoch in range(epochs):
     ### Run through batches
     train_loss = 0.0
     for i, (imgs, labels) in enumerate(train_loader):
-        imgs, labels = imgs.to(device), labels.to(device)
         labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding, so we got a 32,2 matrix (Alex said this is how it is done)
+        imgs, labels = imgs.to(device), labels.to(device)
         ### Zero the gradients of the network
         optimizer.zero_grad()
         ### Run the batch through the model to get the predictions
@@ -128,20 +128,22 @@ for epoch in range(epochs):
 
 
 '''### Validation model ###'''
-model = ConvNet().to(device)
+#model = ConvNet().to(device)
 # model.load_state_dict(torch.load("Filename"))
 model.eval() 
 val_loss_history = list()
-for epoch in range(epochs):
-    val_loss = 0.0
-    for i, (imgs, labels) in enumerate(val_loader):
-        imgs, labels = imgs.to(device), labels.to(device)
-        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
-        prediction = model(imgs)
-        val_loss += criterion(prediction, labels).item()
+with torch.no_grad():
+    for epoch in range(epochs):
+        val_loss = 0.0
+        for i, (imgs, labels) in enumerate(val_loader):
+            labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
+            imgs, labels = imgs.to(device), labels.to(device)
+            prediction = model(imgs)
+            lossVal = criterion(prediction, labels)
+            val_loss += lossVal.item()
         
-    val_loss = val_loss/len(val_loader)
-    val_loss_history.append(val_loss)
+        val_loss = val_loss/len(val_loader)
+        val_loss_history.append(val_loss)
         
 
 '''### Plot test and validation model ###'''
