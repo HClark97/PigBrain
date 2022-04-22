@@ -26,7 +26,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 '''### Hyperparameters ###'''
 batch_size = 32
 minibatch = 40
-epochs = 5
+epochs = 100
 
 
 '''### Data ###'''
@@ -93,6 +93,8 @@ train_loss_history = list()
 val_loss_history = list()
 n_correct = 0
 n_samples = 0
+val_best = 0
+val_now = 0
 ### Run through epochs
 for epoch in range(epochs):
     ### Run through batches
@@ -133,13 +135,26 @@ for epoch in range(epochs):
         lossVal = criterion(prediction, labels)
         val_loss += lossVal.item()
             
-                                                          
-
+    
+    
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
     val_loss = val_loss/len(val_loader)
     val_loss_history.append(val_loss)
+    
+    ## Model chechpoint
+    if val_loss < val_best:
+        #torch.save(model.state.dict(), filepath)
+        val_best = val_loss
+        patience = 0
+    
+    ## Early stopping
+    if patience == 8:
+        break
+    patience += 1
+
+
 
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
