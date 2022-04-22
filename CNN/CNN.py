@@ -21,12 +21,12 @@ import torchvision
 import numpy as np
 
 '''### Device configuration ###'''
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
 
 '''### Hyperparameters ###'''
 batch_size = 32
 minibatch = 40
-epochs = 10
+epochs = 5
 
 
 '''### Data ###'''
@@ -63,27 +63,30 @@ class ConvNet(nn.Module):
         self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
         self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
         self.fc1 = nn.Linear(in_features=8960, out_features=144)
-        self.fc2 = nn.Linear(in_features=144, out_features=72)
-        self.fc3 = nn.Linear(in_features=72, out_features=2)
+        self.fc2 = nn.Linear(in_features=144, out_features=20)
+        self.fc3 = nn.Linear(in_features=20, out_features=2)
+        self.activation = torch.nn.Softmax(dim=1)
         
 
     def forward(self, x):
-        x = self.pool1(F.relu(self.conv1(x)))  # -> n, 6, 14, 14
-        x = self.pool2(F.relu(self.conv2(x)))  # -> n, 16, 5, 5
-        x = x.view(-1, 8960)            # -> n, 400
-        x = F.relu(self.fc1(x))               # -> n, 120
-        x = F.relu(self.fc2(x))               # -> n, 84
+        x = self.pool1(F.relu(self.conv1(x))) 
+        x = self.pool2(F.relu(self.conv2(x)))  
+        x = x.view(-1, 8960)            
+        x = F.relu(self.fc1(x))               
+        x = F.relu(self.fc2(x))               
         x = F.dropout(x, p=0.5, training=self.training)
-        x = self.fc3(x)                       # -> n, 10
+        x = self.fc3(x)
+        x = self.activation(x)
+                    
          
         return x
     
 ### Instantiate the network
 model = ConvNet().to(device)
 ### Define the optimizer
-optimizer = optim.NAdam(model.parameters())
+optimizer = optim.Adam(model.parameters())
 ### Define the loss function
-criterion = nn.BCEWithLogitsLoss()
+criterion = nn.BCELoss()
 
 '''### Training ###'''
 train_loss_history = list()
@@ -111,6 +114,9 @@ for epoch in range(epochs):
 
         ### Save losses
         train_loss += loss.item()
+        ### Save accuracy
+        
+        
                 ### Print Epoch, batch and loss
         if i % minibatch == minibatch-1:  # print every 40 batches
             print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
