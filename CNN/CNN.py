@@ -27,7 +27,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 32
 minibatch = 50
 epochs = 10
-
+learning_rate = 0.01
 
 '''### Data ###'''
 def torch_loader(path):
@@ -86,7 +86,7 @@ class ConvNet(nn.Module):
 ### Instantiate the network
 model = ConvNet().to(device)
 ### Define the optimizer
-optimizer = optim.Adam(model.parameters())
+optimizer = optim.Adam(model.parameters(),lr=learning_rate)
 ### Define the loss function
 criterion = nn.BCELoss()
 
@@ -140,7 +140,7 @@ for epoch in range(epochs):
             ### accuracy of the validation
             _, predicted = torch.max(prediction, 1) #label with highest value is our prediction
             n_samples += labels.size(0) #how many samples has it gone through
-            n_correct += (predicted == labels[:,0]).sum().item() #how many of them were correct
+            n_correct += (predicted == labels[:,0]).sum().item() #how many are correct
         
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
