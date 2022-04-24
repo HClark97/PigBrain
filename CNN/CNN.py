@@ -27,7 +27,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 32
 minibatch = 50
 epochs = 10
-learning_rate = 0.01
+learning_rate = 0.001
 
 '''### Data ###'''
 def torch_loader(path):
