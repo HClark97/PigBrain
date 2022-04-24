@@ -26,7 +26,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 '''### Hyperparameters ###'''
 batch_size = 32
 minibatch = 40
-epochs = 100
+epochs = 5
 
 
 '''### Data ###'''
@@ -93,8 +93,8 @@ train_loss_history = list()
 val_loss_history = list()
 n_correct = 0
 n_samples = 0
-val_best = 0
-val_now = 0
+val_best = 100
+patience = 0
 ### Run through epochs
 for epoch in range(epochs):
     ### Run through batches
@@ -150,7 +150,7 @@ for epoch in range(epochs):
         patience = 0
     
     ## Early stopping
-    if patience == 8:
+    if patience == 3:
         break
     patience += 1
 
