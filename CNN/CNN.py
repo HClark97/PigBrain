@@ -25,8 +25,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 '''### Hyperparameters ###'''
 batch_size = 32
-minibatch = 40
-epochs = 5
+minibatch = 50
+epochs = 10
 
 
 '''### Data ###'''
@@ -71,8 +71,10 @@ class ConvNet(nn.Module):
     def forward(self, x):
         x = self.pool1(F.relu(self.conv1(x))) 
         x = self.pool2(F.relu(self.conv2(x)))  
-        x = x.view(-1, 8960)            
-        x = F.relu(self.fc1(x))               
+        x = x.view(-1, 8960)    
+        x= F.dropout(x, p=0.25, training=self.training)        
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, p=0.25, training=self.training)               
         x = F.relu(self.fc2(x))               
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.fc3(x)
@@ -99,7 +101,7 @@ patience = 0
 for epoch in range(epochs):
     ### Run through batches
     train_loss = 0.0
-    val_loss = 0.0
+    
     for i, (imgs, labels) in enumerate(train_loader):
         labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding, so we got a 32,2 matrix (Alex said this is how it is done)
         imgs, labels = imgs.to(device), labels.to(device)
@@ -126,23 +128,28 @@ for epoch in range(epochs):
                 i + 1, 
                 len(train_loader), 
                 train_loss / (i*batch_size))) #fix denne algoritme, den virker ikke korrekt
-            
-    model.eval() 
-    for i, (imgs, labels) in enumerate(val_loader):
-        labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
-        imgs, labels = imgs.to(device), labels.to(device)
-        prediction = model(imgs)
-        lossVal = criterion(prediction, labels)
-        val_loss += lossVal.item()
-            
-    
-    
+    with torch.no_grad():
+        model.eval()
+        val_loss = 0.0
+        for i, (imgs, labels) in enumerate(val_loader):
+            labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding
+            imgs, labels = imgs.to(device), labels.to(device)
+            prediction = model(imgs)
+            lossVal = criterion(prediction, labels)
+            val_loss += lossVal.item()
+            ### accuracy of the validation
+            _, predicted = torch.max(prediction, 1) #label with highest value is our prediction
+            n_samples += labels.size(0) #how many samples has it gone through
+            n_correct += (predicted == labels[:,0]).sum().item() #how many of them were correct
+        
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
     val_loss = val_loss/len(val_loader)
     val_loss_history.append(val_loss)
-    
+    acc = 100.0 * n_correct / n_samples
+    print(f'Accuracy of the network: {acc} %')
+          
     ## Model chechpoint
     if val_loss < val_best:
         #torch.save(model.state.dict(), filepath)
