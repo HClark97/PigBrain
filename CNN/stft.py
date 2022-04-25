@@ -28,12 +28,12 @@ train_nonnox_data = []
 train_nox_data =  []
 test_nonnox_data = []
 test_nox_data =  []
-person = 'mikkel'
+person = 'hjalte'
 'Definitions'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
 'STFT definitions'
-cutoff = 500
+cutoff = 100
 nperseg = 350
 w = 'hann'
 i = 0

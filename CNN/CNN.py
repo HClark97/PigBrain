@@ -24,10 +24,10 @@ import numpy as np
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
 
 '''### Hyperparameters ###'''
-batch_size = 32
-minibatch = 50
-epochs = 10
-learning_rate = 0.002
+batch_size = 64
+minibatch = 500
+epochs = 20
+learning_rate = 0.001
 
 '''### Data ###'''
 def torch_loader(path):
@@ -59,34 +59,30 @@ class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1)
+        self.conv2_drop = nn.Dropout2d()
         self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
         self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
-        self.fc1 = nn.Linear(in_features=8960, out_features=144)
-        self.fc2 = nn.Linear(in_features=144, out_features=20)
-        self.fc3 = nn.Linear(in_features=20, out_features=2)
+        self.fc1 = nn.Linear(in_features=800, out_features=20)
+        self.fc2 = nn.Linear(in_features=20, out_features=2)
         self.activation = torch.nn.Softmax(dim=1)
         
 
     def forward(self, x):
         x = self.pool1(F.relu(self.conv1(x))) 
-        x = self.pool2(F.relu(self.conv2(x)))  
-        x = x.view(-1, 8960)    
+        x = self.pool2(F.relu(self.conv2_drop(self.conv2(x))))
+        x = x.view(-1, 800)    
         x= F.dropout(x, p=0.25, training=self.training)        
         x = F.relu(self.fc1(x))
-        x = F.dropout(x, p=0.25, training=self.training)               
+        x = F.dropout(x, p=0.5, training=self.training)               
         x = F.relu(self.fc2(x))               
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = self.fc3(x)
         x = self.activation(x)
-                    
-         
         return x
     
 ### Instantiate the network
 model = ConvNet().to(device)
 ### Define the optimizer
-optimizer = optim.Adam(model.parameters(),lr=learning_rate)
+optimizer = optim.NAdam(model.parameters(),lr=learning_rate)
 ### Define the loss function
 criterion = nn.BCELoss()
 
@@ -138,10 +134,15 @@ for epoch in range(epochs):
             lossVal = criterion(prediction, labels)
             val_loss += lossVal.item()
             ### accuracy of the validation
-            _, predicted = torch.max(prediction, 1) #label with highest value is our prediction
             n_samples += labels.size(0) #how many samples has it gone through
-            n_correct += (predicted == labels[:,0]).sum().item() #how many are correct
-        
+            n_correct += (torch.round(prediction[:,0]) == labels[:,0]).sum().item() #how many are correct
+                        ### Print Epoch, batch and loss
+            if i % minibatch == minibatch-1:  # print every 40 batches
+                print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
+                    epoch + 1, 
+                    i + 1, 
+                    len(val_loader), 
+                    val_loss / (i*batch_size))) #fix denne algoritme, den virker ikke korrekt
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
@@ -157,7 +158,7 @@ for epoch in range(epochs):
         patience = 0
     
     ## Early stopping
-    if patience == 3:
+    if patience == 5:
         break
     patience += 1
 
