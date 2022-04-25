@@ -28,15 +28,16 @@ train_nonnox_data = []
 train_nox_data =  []
 test_nonnox_data = []
 test_nox_data =  []
-person = 'hjalte'
+person = 'mikkel'
 'Definitions'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
 'STFT definitions'
-cutoff = 100
+cutoff = 500
 nperseg = 350
 w = 'hann'
 i = 0
+j = 0
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
@@ -45,12 +46,12 @@ for group in range (len(groupname)): #2: nox and nonNox
             if np.size(data['NonnoxERP']['block'][sets]['channel']):
                 # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
                 #print('Deleted entry in channel '+ str(channel+1))
-                for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
+                for epoch in range(20):#len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
-                            stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
-                            
+                            #stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
+                            stim = np.mean(data['NoxERP']['block'][45]['channel'][15]['ERPs'][:,j:j+5],axis = 1)
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -104,7 +105,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\NonNox')
                                     torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
-                            i +=1                          
+                            i +=1 #counter til at gemme filer
+                            j = j+5 #counter til gennemsnit af STFT
                             'Plot colormap'
                             # plt.figure()
                             # plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)

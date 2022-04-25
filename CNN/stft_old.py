@@ -19,7 +19,7 @@ if not 'data' in globals():
 
 'Definitions'
 fs = 6103.515625
-cutoff = 500
+cutoff = 108
 nperseg = 350
 w = 'hann'
 
