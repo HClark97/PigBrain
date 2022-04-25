@@ -47,11 +47,13 @@ for group in range (len(groupname)): #2: nox and nonNox
                 # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
                 #print('Deleted entry in channel '+ str(channel+1))
                 j = 0
-                for epoch in range(20):#len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
+                for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
-                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+5],axis =1)                       
+                            stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
+                            'get mean data'
+                            #stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+5],axis =1) 
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -108,13 +110,13 @@ for group in range (len(groupname)): #2: nox and nonNox
                             i +=1 #counter til at gemme filer
                             j = j+5 #counter til gennemsnit af STFT
                             'Plot colormap'
-                            if j == 5:
-                                plt.figure()
-                                plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
-                                plt.xlabel('Time [sec]', fontweight='bold')
-                                plt.ylabel('Frequency [Hz]', fontweight='bold')    
-                                plt.colorbar()
-                                plt.ylim(0,300)
+                            # if j == 5:
+                            #     plt.figure()
+                            #     plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
+                            #     plt.xlabel('Time [sec]', fontweight='bold')
+                            #     plt.ylabel('Frequency [Hz]', fontweight='bold')    
+                            #     plt.colorbar()
+                            #     plt.ylim(0,300)
                             
                                  
 # torch.save(val_nox_data,'val_nox.pt')
