@@ -21,8 +21,8 @@ import torchvision
 import numpy as np
 
 '''### Device configuration ###'''
-device = torch.device("cpu") 
-#"cuda" if torch.cuda.is_available() else 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# 
 '''### Hyperparameters ###'''
 batch_size = 64
 minibatch = 100
@@ -58,21 +58,21 @@ val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=2, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=2, padding=1)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1)
         self.conv2_drop = nn.Dropout2d()
         self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
         self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
-        self.fc1 = nn.Linear(in_features=5280, out_features=20)
+        self.fc1 = nn.Linear(in_features=4480, out_features=20)
         self.fc2 = nn.Linear(in_features=20, out_features=2)
         self.activation = torch.nn.Softmax(dim=1)
         self.sigmoid1 = torch.nn.Sigmoid()
         
         
     def forward(self, x):
-        x = self.pool1(F.relu(self.conv1(x))) 
+        x = self.pool2(F.relu(self.conv1(x))) 
         x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 5280)    
+        x = x.view(-1, 4480)  
         #x= F.dropout(x, p=0.25, training=self.training)        
         x = self.sigmoid1(self.fc1(x))
         #x = F.dropout(x, p=0.5, training=self.training)               
