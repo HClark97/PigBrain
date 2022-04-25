@@ -4,11 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-<<<<<<< Updated upstream
-recent_files = ['CNN/stft.py', 'CNN/stft_old.py', 'CNN/CNN.py', 'Preprocessing/Preprocessing.py']
-=======
 recent_files = ['CNN/stft.py', 'CNN/CNN.py', 'loader.py', 'Preprocessing/Preprocessing.py']
->>>>>>> Stashed changes
 
 [main]
 version = 0.2.0
