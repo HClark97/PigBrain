@@ -33,7 +33,7 @@ person = 'nickolaj'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
 i = 0
-mean_size=10
+mean_size=20
 
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
@@ -55,7 +55,7 @@ for group in range (len(groupname)): #2: nox and nonNox
  
                             'Transform to tensor'
                             tempdata = torch.tensor(stim)
-                            tempdata = torch.unsqueeze(tempdata,0)
+                            tempdata = torch.unsqueeze(torch.unsqueeze(tempdata,0),0)
                             if 0 <= sets <=5:
                                 if group == 1:
                                     if person == 'hjalte':
