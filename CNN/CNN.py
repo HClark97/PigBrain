@@ -72,7 +72,7 @@ class ConvNet(nn.Module):
     def forward(self, x):
         x = self.pool2(F.relu(self.conv1(x))) 
         x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 240)  
+        x = x.view(-1, 240)
         x= F.dropout(x, p=0.25, training=self.training)        
         x = self.sigmoid1(self.fc1(x))
         x = F.dropout(x, p=0.5, training=self.training)               

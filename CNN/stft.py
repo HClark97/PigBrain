@@ -33,7 +33,7 @@ person = 'mikkel'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
 'STFT definitions'
-cutoff = 500
+cutoff = 100
 nperseg = 350
 w = 'hann'
 i = 0
@@ -47,13 +47,14 @@ for group in range (len(groupname)): #2: nox and nonNox
                 # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
                 #print('Deleted entry in channel '+ str(channel+1))
                 j = 0
-                for epoch in range(len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
+                for epoch in range(20):#len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
+                        'if you want mean, epoch in range 20, else len(data....)'
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
-                            stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
+                            #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
-                            #stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+5],axis =1) 
+                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+5],axis =1) 
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -70,26 +71,26 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\val\Nox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\STFT\val\Nox')
                                     torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
                                 else:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\NonNox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\val\Nonnox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\STFT\val\Nonnox')
                                     torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
                             if 9 <= sets <=11:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Test\Nox')
                                     if person =='mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Test\Nox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Test\Nox')
                                     torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
                                 else:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Test\NonNox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Test\Nonnox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
                             if 12 <= sets <= 47: 
@@ -97,14 +98,14 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\Nox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Train\Nox')
                                     
                                     torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
                                 else:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\NonNox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\NonNox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Train\Nonnox')
                                     torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                             i +=1 #counter til at gemme filer
