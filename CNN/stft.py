@@ -37,7 +37,7 @@ cutoff = 100
 nperseg = 350
 w = 'hann'
 i = 0
-
+mean_size = 10
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
@@ -47,14 +47,14 @@ for group in range (len(groupname)): #2: nox and nonNox
                 # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs']=[]
                 #print('Deleted entry in channel '+ str(channel+1))
                 j = 0
-                for epoch in range(20):#len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
+                for epoch in range(100//mean_size):#len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
                         'if you want mean, epoch in range 20, else len(data....)'
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
                             #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
-                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+5],axis =1) 
+                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size],axis =1) 
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -109,9 +109,9 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                             i +=1 #counter til at gemme filer
-                            j = j+5 #counter til gennemsnit af STFT
+                            j = j+mean_size #counter til gennemsnit af STFT
                             'Plot colormap'
-                            # if j == 5:
+                            # if j == 10:
                             #     plt.figure()
                             #     plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
                             #     plt.xlabel('Time [sec]', fontweight='bold')
