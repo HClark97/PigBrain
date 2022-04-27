@@ -52,10 +52,10 @@ for group in range (len(groupname)): #2: nox and nonNox
                             #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
                             stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size],axis =1) 
- 
+                            stim=(stim-np.mean(stim))/np.std(stim)
                             'Transform to tensor'
                             tempdata = torch.tensor(stim)
-                            tempdata = torch.unsqueeze(torch.unsqueeze(tempdata,0),0)
+                            tempdata = torch.unsqueeze(tempdata,0)
                             if 0 <= sets <=5:
                                 if group == 1:
                                     if person == 'hjalte':
