@@ -34,8 +34,9 @@ def torch_loader(path):
     sample = torch.load(path)
     return sample
 
-path = pl.filechooser.choose_dir()
-train_data = torchvision.datasets.DatasetFolder(root=path[0],
+#path = pl.filechooser.choose_dir()
+path = r'C:\Users\Mikkel\Desktop\STFT\train'
+train_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt'],
                                                 )
@@ -43,8 +44,9 @@ train_data = torchvision.datasets.DatasetFolder(root=path[0],
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
 
-path = pl.filechooser.choose_dir()
-val_data = torchvision.datasets.DatasetFolder(root=path[0],
+#path = pl.filechooser.choose_dir()
+path = r'C:\Users\Mikkel\Desktop\STFT\val'
+val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt']
                                                 )
@@ -58,21 +60,24 @@ val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=4, out_channels=16, kernel_size=5, padding=1)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=2, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=8, kernel_size=2, padding=1)
+        self.conv3 = nn.Conv2d(in_channels=8, out_channels=4, kernel_size=2, padding=1)
         self.conv2_drop = nn.Dropout2d()
         #self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
         self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
-        self.fc1 = nn.Linear(in_features=240, out_features=20)
-        self.fc2 = nn.Linear(in_features=20, out_features=2)
+        self.fc1 = nn.Linear(in_features=24, out_features=10)
+        self.fc2 = nn.Linear(in_features=10, out_features=2)
         self.activation = torch.nn.Softmax(dim=1)
         self.sigmoid1 = torch.nn.Sigmoid()
         
         
     def forward(self, x):
-        x = self.pool2(F.relu(self.conv1(x))) 
-        x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 240)
+        x = self.pool2(F.relu(self.conv1(x)))
+        x = self.pool2(F.relu(self.conv2_drop(self.conv2(x)))) 
+        x = self.pool2(F.relu(self.conv2_drop(self.conv3(x))))
+        #print(torch.Tensor.size(x))
+        x = x.view(-1, 24)
         x= F.dropout(x, p=0.25, training=self.training)        
         x = self.sigmoid1(self.fc1(x))
         x = F.dropout(x, p=0.5, training=self.training)               
