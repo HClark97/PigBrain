@@ -32,12 +32,9 @@ person = 'nickolaj'
 'Definitions'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
-'STFT definitions'
-cutoff = 250
-nperseg = 350
-w = 'hann'
 i = 0
-mean_size = 5
+mean_size=20
+
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
@@ -55,18 +52,11 @@ for group in range (len(groupname)): #2: nox and nonNox
                             #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
                             stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size],axis =1) 
-                            'Calculate STFT'
-                            f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
-                            cutindex = round(cutoff/(fs/2)*len(Zxx))
-                            Zxx = Zxx[0:cutindex,:] # Keep up til 500 Hz
-                            f = f[0:cutindex]
-                            Zxx = np.abs(Zxx)
-                            Zxx = Zxx/np.max(Zxx)
-                            
+ 
                             'Transform to tensor'
-                            tempdata = torch.tensor(Zxx)
-                            tempdata = torch.unsqueeze(tempdata,0)
-                            if 21 <= sets <=23:
+                            tempdata = torch.tensor(stim)
+                            tempdata = torch.unsqueeze(torch.unsqueeze(tempdata,0),0)
+                            if 0 <= sets <=5:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
@@ -101,7 +91,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                             os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
-                            if 12 <= sets <= 20 or 0 <= sets <= 8 or  24<= sets <= 47: 
+                            if 12 <= sets <= 47: 
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
@@ -123,7 +113,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                             i +=1 #counter til at gemme filer
                             j = j+mean_size #counter til gennemsnit af STFT
                             'Plot colormap'
-                            # if j == 10:
+                            # if j == 5:
                             #     plt.figure()
                             #     plt.pcolormesh(t, f, Zxx, cmap=cm.plasma)
                             #     plt.xlabel('Time [sec]', fontweight='bold')
