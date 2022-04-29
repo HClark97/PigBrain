@@ -19,20 +19,26 @@ from torch.utils.tensorboard import SummaryWriter
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 50
-minibatch = 2
+batch_size = 200
+minibatch = 10
 epochs = 300
-learning_rate = 0.002
-ch1 = 4
-ch2 = 4
-ch3 = 8
-ch4 = 16
-ch5 = 64
+learning_rate = 0.0001
+ch1 = 10
+ch2 = 10
+ch3 = 25
+ch4 = 50
+ch5 = 100
 
 '''### Data ###'''
 def torch_loader(path):
     sample = torch.load(path)
     return sample
+
+# # Writer will output to ./runs/ directory by default
+writer = SummaryWriter()
+
+
+
 
 path = r'C:\Users\Katja Stougård\Documents\GitHub\Data\Train'
 train_data = torchvision.datasets.DatasetFolder(root=path,
@@ -61,11 +67,11 @@ class ConvNet(nn.Module):
         self.conv1 = nn.Conv1d(in_channels=1, out_channels=ch1, kernel_size=5)
         self.conv2 = nn.Conv1d(in_channels=ch1, out_channels=ch2, kernel_size=5)
         self.conv3 = nn.Conv1d(in_channels=ch2, out_channels=ch3, kernel_size=5)
-        #self.conv4 = nn.Conv1d(in_channels=ch3, out_channels=ch4, kernel_size=5)
-        #self.conv5 = nn.Conv1d(in_channels=ch4, out_channels=ch5, kernel_size=5)
+        self.conv4 = nn.Conv1d(in_channels=ch3, out_channels=ch4, kernel_size=5)
+        self.conv5 = nn.Conv1d(in_channels=ch4, out_channels=ch5, kernel_size=5)
         self.pool = nn.MaxPool1d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
-        self.fc1 = nn.Linear(in_features=ch3*416, out_features=40)
-        #self.fc2 = nn.Linear(in_features=80, out_features=40)
+        self.fc1 = nn.Linear(in_features=ch5*101, out_features=80)
+        self.fc2 = nn.Linear(in_features=80, out_features=40)
         self.fc3 = nn.Linear(in_features=40, out_features=2)
         #self.sigmoid = torch.nn.Sigmoid()
         self.softmax = torch.nn.Softmax(dim=1)
@@ -76,15 +82,15 @@ class ConvNet(nn.Module):
         x = self.pool(self.LeakyReLU(self.conv1(x))) 
         x = self.pool(self.LeakyReLU(self.conv2(x)))
         x = self.pool(self.LeakyReLU(self.conv3(x)))
-        #x = self.pool(self.LeakyReLU(self.conv4(x)))
-        #x = self.pool(self.LeakyReLU(self.conv5(x)))
+        x = self.pool(self.LeakyReLU(self.conv4(x)))
+        x = self.pool(self.LeakyReLU(self.conv5(x)))
         #print(torch.Tensor.size(x))
         #print(torch.Tensor.size(x)[1]*torch.Tensor.size(x)[2])
-        x = x.view(-1, ch3*416)
+        x = x.view(-1, ch5*101)
         x= F.dropout(x, p=0.1, training=self.training)        
         x = self.LeakyReLU(self.fc1(x))
         x = F.dropout(x, p=0.1, training=self.training)               
-        #x = self.LeakyReLU(self.fc2(x))
+        x = self.LeakyReLU(self.fc2(x))
         x = self.softmax(self.fc3(x))           
         return x
 
@@ -171,15 +177,11 @@ for epoch in range(epochs):
         break
     patience += 1
 
-    # Writer will output to ./runs/ directory by default
-    writer = SummaryWriter()
     
-    writer.add_scalar('Loss/train', train_loss, i)
     
-    writer.add_scalar('Loss/val', val_loss,i)
-    
-    writer.close()
 
+    writer.add_scalars('Loss', {'Training Loss': train_loss,'Validation Loss': val_loss,}, epoch)
+    writer.add_scalar('Validation Accuracy', acc,epoch)
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
 
@@ -216,7 +218,7 @@ plt.legend()
 plt.show()
 
 
-
+writer.close()
 
 
 #import os
