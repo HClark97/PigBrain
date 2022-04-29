@@ -54,7 +54,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                             'Get epoch'
                             #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
-                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size],axis =1) 
+                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size-1],axis =1) 
                             'Calculate STFT'
                             f, t, Zxx = signal.stft(stim, fs, window = w, nperseg = nperseg, noverlap=nperseg//2)
                             cutindex = round(cutoff/(fs/2)*len(Zxx))
@@ -63,11 +63,11 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = np.abs(Zxx)
                             Zxx = ndimage.zoom(Zxx,10.0)
                             Zxx = Zxx/np.max(Zxx)
-                            # sets 0-8, 21,22,23,24,25,27 bad
+                            # sets 0-8, 21:26 bad
                             'Transform to tensor'
                             tempdata = torch.tensor(Zxx)
                             tempdata = torch.unsqueeze(tempdata,0)
-                            if 12 <= sets <=14:
+                            if 3 <= sets <=5:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
@@ -102,7 +102,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                             os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
-                            if 4 <= sets <= 5 or 15 <= sets <= 20  or  27 <= sets <= 47:  #0 <= sets <= 8 or 
+                            if 12 <= sets <= 20 or 27 <= sets <=47:  #0 <= sets <= 8 or 
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
