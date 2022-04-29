@@ -33,7 +33,7 @@ person = 'katja'
 fs = 6103.515625
 groupname = ['NonnoxERP','NoxERP']
 i = 0
-mean_size=10
+mean_size=2
 
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
@@ -49,9 +49,9 @@ for group in range (len(groupname)): #2: nox and nonNox
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
-                            #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
+                            stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
-                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size-1],axis =1) 
+                            #stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size-1],axis =1) 
                             stim=(stim-np.mean(stim))/np.std(stim)
                             'Transform to tensor'
                             tempdata = torch.tensor(stim)

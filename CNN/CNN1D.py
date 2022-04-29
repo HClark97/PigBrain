@@ -4,7 +4,7 @@ Created on Mon Mar 21 10:54:19 2022
 
 @author: HClark
 """
-
+import shutil
 from torch.utils.data import DataLoader
 import torch.nn as nn
 import torch.nn.functional as F
@@ -19,15 +19,15 @@ from torch.utils.tensorboard import SummaryWriter
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 200
-minibatch = 10
-epochs = 300
+batch_size = 100
+minibatch = 100
+epochs = 1000
 learning_rate = 0.0001
-ch1 = 10
-ch2 = 10
-ch3 = 25
-ch4 = 50
-ch5 = 100
+ch1 = 2
+ch2 = 4
+ch3 = 8
+ch4 = 8
+ch5 = 8
 
 '''### Data ###'''
 def torch_loader(path):
@@ -35,6 +35,7 @@ def torch_loader(path):
     return sample
 
 # # Writer will output to ./runs/ directory by default
+shutil.rmtree('C:/Users/Katja Stougård/Documents/GitHub/PigBrain/CNN/runs')
 writer = SummaryWriter()
 
 
@@ -173,15 +174,15 @@ for epoch in range(epochs):
         patience = 0
     
     ## Early stopping
-    if patience == 10:
-        break
-    patience += 1
+    #if patience == 20:
+        #break
+   # patience += 1
 
     
     
 
-    writer.add_scalars('Loss', {'Training Loss': train_loss,'Validation Loss': val_loss,}, epoch)
-    writer.add_scalar('Validation Accuracy', acc,epoch)
+    writer.add_scalars('Loss', {'Training': train_loss,'Validation': val_loss,}, epoch)
+    writer.add_scalar('Validation Accuracy',acc,epoch)
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
 
