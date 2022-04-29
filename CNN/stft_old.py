@@ -12,21 +12,21 @@ import matplotlib.cm as cm
 import numpy as np
 import scipy
 from scipy import signal
-
+from scipy import ndimage
 'Load data'
 if not 'data' in globals():
     data=l.load_mat_file()
 
 'Definitions'
 fs = 6103.515625
-cutoff = 108
+cutoff = 250
 nperseg = 350
 w = 'hann'
 
 for i in range(1):
     #stim=data['NoxERP']['block'][45]['channel'][15]['ERPs'][:,0]
     
-    stim = np.mean(data['NoxERP']['block'][45]['channel'][15]['ERPs'],axis = 1)
+    stim = np.mean(data['NoxERP']['block'][40]['channel'][15]['ERPs'],axis = 1)
     'Turn stim into tensor'
     # stim_tensor=nn.tensor(stim)
     
@@ -38,7 +38,10 @@ for i in range(1):
     cutindex= round(cutoff/(fs/2)*len(Zxx))
     Zxx = Zxx[0:cutindex,:] # Keep up til 500 Hz
     f = f[0:cutindex]
+    f = ndimage.zoom(f,10.0)
+    t = ndimage.zoom(t,10.0)
     Zxx = np.abs(Zxx)
+    Zxx = ndimage.zoom(Zxx,10.0)
     Zxx = Zxx/np.max(Zxx)
     
     'Add absolute value of imaginary numbers to maginary'
