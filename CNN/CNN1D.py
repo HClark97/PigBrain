@@ -24,10 +24,15 @@ import numpy as np
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 8
-minibatch = 100
-epochs = 20
+batch_size = 50
+minibatch = 2
+epochs = 300
 learning_rate = 0.002
+ch1 = 4
+ch2 = 4
+ch3 = 8
+ch4 = 16
+ch5 = 64
 
 '''### Data ###'''
 def torch_loader(path):
@@ -43,7 +48,7 @@ train_data = torchvision.datasets.DatasetFolder(root=path,
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
 
-path =r'C:\Users\nicko\Desktop\STFT\Val'
+path =r'C:\Users\nicko\Desktop\STFT\Test'
 val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt']
@@ -58,34 +63,34 @@ val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=5, padding=0)
-        self.conv2 = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=5, padding=0)
-        self.conv3 = nn.Conv1d(in_channels=32, out_channels=32, kernel_size=5, padding=0)
-        self.conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=5, padding=0)
-        self.conv5 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=5, padding=0)
-        self.pool = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
-        self.fc1 = nn.Linear(in_features=404, out_features=80)
-        self.fc2 = nn.Linear(in_features=80, out_features=40)
+        self.conv1 = nn.Conv1d(in_channels=1, out_channels=ch1, kernel_size=5)
+        self.conv2 = nn.Conv1d(in_channels=ch1, out_channels=ch2, kernel_size=5)
+        self.conv3 = nn.Conv1d(in_channels=ch2, out_channels=ch3, kernel_size=5)
+        #self.conv4 = nn.Conv1d(in_channels=ch3, out_channels=ch4, kernel_size=5)
+        #self.conv5 = nn.Conv1d(in_channels=ch4, out_channels=ch5, kernel_size=5)
+        self.pool = nn.MaxPool1d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
+        self.fc1 = nn.Linear(in_features=ch3*416, out_features=40)
+        #self.fc2 = nn.Linear(in_features=80, out_features=40)
         self.fc3 = nn.Linear(in_features=40, out_features=2)
-        self.sigmoid = torch.nn.Sigmoid()
-        self.activation = torch.nn.Softmax(dim=1)
+        #self.sigmoid = torch.nn.Sigmoid()
+        self.softmax = torch.nn.Softmax(dim=1)
+        self.LeakyReLU = torch.nn.LeakyReLU()
         
         
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x))) 
-        x = self.pool(F.relu(self.conv2(x)))
-        x = self.pool(F.relu(self.conv3(x)))
-        x = self.pool(F.relu(self.conv4(x)))
-        x = self.pool(F.relu(self.conv5(x)))
+        x = self.pool(self.LeakyReLU(self.conv1(x))) 
+        x = self.pool(self.LeakyReLU(self.conv2(x)))
+        x = self.pool(self.LeakyReLU(self.conv3(x)))
+        #x = self.pool(self.LeakyReLU(self.conv4(x)))
+        #x = self.pool(self.LeakyReLU(self.conv5(x)))
         #print(torch.Tensor.size(x))
         #print(torch.Tensor.size(x)[1]*torch.Tensor.size(x)[2])
-        x = x.view(-1, 404)
-        x= F.dropout(x, p=0.5, training=self.training)        
-        x = self.sigmoid(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)               
-        x = self.sigmoid(self.fc2(x))
-        x = self.fc3(x)
-        x = self.activation(x)              
+        x = x.view(-1, ch3*416)
+        x= F.dropout(x, p=0.1, training=self.training)        
+        x = self.LeakyReLU(self.fc1(x))
+        x = F.dropout(x, p=0.1, training=self.training)               
+        #x = self.LeakyReLU(self.fc2(x))
+        x = self.softmax(self.fc3(x))           
         return x
 
 ### Instantiate the network
@@ -128,7 +133,7 @@ for epoch in range(epochs):
         
                 ### Print Epoch, batch and loss
         if i % minibatch == minibatch-1:  # print every 40 batches
-            print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
+            print('[Epoch: {} Batch: {}/{}] Loss: {}'.format(
                 epoch + 1, 
                 i + 1, 
                 len(train_loader), 
@@ -167,7 +172,7 @@ for epoch in range(epochs):
         patience = 0
     
     ## Early stopping
-    if patience == 5:
+    if patience == 10:
         break
     patience += 1
 
