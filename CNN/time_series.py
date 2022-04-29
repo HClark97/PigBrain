@@ -61,7 +61,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\val\Nox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Timeseries\val\Nox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Desktop\STFT\val\Nox')
                                     if person == 'katja':
@@ -71,7 +71,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\NonNox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\val\Nonnox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Timeseries\train\Nonnox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Desktop\STFT\val\Nonnox')
                                     if person == 'katja':
@@ -82,7 +82,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Test\Nox')
                                     if person =='mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Test\Nox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Timeseries\test\Nox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nox')
                                     if person == 'katja':
@@ -92,7 +92,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Test\NonNox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Test\Nonnox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Timeseries\test\Nonnox')
                                     if person == 'nickolaj':
                                             os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nonnox')
                                     if person == 'katja':
@@ -104,7 +104,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\Nox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Timeseries\Train\Nox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Desktop\STFT\Train\Nox')
                                     if person == 'katja':
@@ -115,7 +115,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\NonNox')
                                     if person == 'mikkel':
-                                        os.chdir(r'C:\Users\Mikkel\Desktop\Uni\projekt\P8\STFT\Train\NonNox')
+                                        os.chdir(r'C:\Users\Mikkel\Desktop\Timeseries\Train\NonNox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Desktop\STFT\Train\Nonnox')
                                     if person == 'katja':
