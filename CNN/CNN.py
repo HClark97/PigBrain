@@ -19,6 +19,7 @@ import mpu
 import plyer as pl
 import torchvision
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -33,6 +34,10 @@ patientswait = 5
 def torch_loader(path):
     sample = torch.load(path)
     return sample
+
+# # Writer will output to ./runs/ directory by default
+writer = SummaryWriter()
+
 
 #path = pl.filechooser.choose_dir()
 path = r'C:\Users\Mikkel\Desktop\STFT\train'
@@ -182,7 +187,8 @@ for epoch in range(epochs):
     patience += 1
 
 
-
+    writer.add_scalars('Loss', {'Training Loss': train_loss,'Validation Loss': val_loss,}, epoch)
+    writer.add_scalar('Validation Accuracy', acc,epoch)
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
 
@@ -217,6 +223,9 @@ plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend()
 plt.show()
+
+
+writer.close()
 
 #import os
 #os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
