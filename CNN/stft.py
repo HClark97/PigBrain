@@ -37,7 +37,7 @@ cutoff = 250
 nperseg = 350
 w = 'hann'
 i = 0
-mean_size = 10
+mean_size = 5
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
@@ -48,7 +48,6 @@ for group in range (len(groupname)): #2: nox and nonNox
                 #print('Deleted entry in channel '+ str(channel+1))
                 j = 0
                 for epoch in range(100//mean_size):#len(data['NonnoxERP']['block'][0]['channel'][0]['ERPs'][0])): #100
-                        'if you want mean, epoch in range 20, else len(data....)'
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
@@ -63,11 +62,11 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = np.abs(Zxx)
                             Zxx = ndimage.zoom(Zxx,10.0)
                             Zxx = Zxx/np.max(Zxx)
-                            # sets 0-8, 21:26 bad
+                            # sets 0-2,6, 21:26 bad
                             'Transform to tensor'
                             tempdata = torch.tensor(Zxx)
                             tempdata = torch.unsqueeze(tempdata,0)
-                            if 3 <= sets <=5:
+                            if 33 <= sets <=35:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
@@ -102,7 +101,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                             os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
-                            if 12 <= sets <= 20 or 27 <= sets <=47:  #0 <= sets <= 8 or 
+                            if 36 <= sets <= 47 or 12 <= sets <= 14:#3 <= sets <= 5 or 12 <= sets <=20 or 27 <= sets <= 41:  #0 <= sets <= 8 or 
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')

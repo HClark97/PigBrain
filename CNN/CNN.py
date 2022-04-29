@@ -24,11 +24,11 @@ import numpy as np
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 32
-minibatch = 40
+batch_size = 64
+minibatch = 48
 epochs = 200
-learning_rate = 0.001
-patientswait = 10
+learning_rate = 0.0002
+patientswait = 5
 '''### Data ###'''
 def torch_loader(path):
     sample = torch.load(path)
@@ -45,17 +45,19 @@ train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
 
 #path = pl.filechooser.choose_dir()
-path = r'C:\Users\Mikkel\Desktop\STFT\test' 
+path = r'C:\Users\Mikkel\Desktop\STFT\val' 
 val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt']
                                                 )
 
 val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
-ch1 = 8
-ch2 = 16
-ch3 = 16
-fc1in = 5152
+ch1 = 32
+ch2 = 64
+ch3 = 64
+#ch4 = 32
+#ch5 = 32
+fc1in = 128
 fciout = 10
 
 
@@ -64,9 +66,12 @@ fciout = 10
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=ch1, kernel_size=5, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=ch1, out_channels=ch2, kernel_size=5, padding=1)
-        self.conv3 = nn.Conv2d(in_channels=ch2, out_channels=ch3, kernel_size=5, padding=1)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=ch1, kernel_size=5, padding=1,stride = 2) 
+        self.conv2 = nn.Conv2d(in_channels=ch1, out_channels=ch2, kernel_size=5, padding=1,stride = 2)
+        self.conv3 = nn.Conv2d(in_channels=ch2, out_channels=ch3, kernel_size=5, padding=1,stride = 2)
+        #self.conv4 = nn.Conv2d(in_channels=ch3, out_channels=ch4, kernel_size=5, padding=1)
+        #self.conv5 = nn.Conv2d(in_channels=ch4, out_channels=ch5, kernel_size=5, padding=1)
+
         self.conv2_drop = nn.Dropout2d()
         #self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
         self.pool2 = nn.MaxPool2d(kernel_size=3,stride=2) #Den normale pooling vi havde fra starten
@@ -80,8 +85,10 @@ class ConvNet(nn.Module):
     def forward(self, x):
         x = self.pool2(self.leaky(self.conv1(x)))
         x = self.pool2(self.leaky(self.conv2_drop(self.conv2(x)))) 
-        x = self.pool2(self.leaky(self.conv2_drop(self.conv3(x))))
-        #print(torch.Tensor.size(x))
+        #x = self.pool2(self.leaky(self.conv2_drop(self.conv3(x)))) 
+        #x = self.pool2(self.leaky(self.conv2_drop(self.conv4(x)))) 
+        x = self.pool2(self.leaky(self.conv3(x)))
+       # print(torch.Tensor.size(x))
         x = x.view(-1, fc1in)
         x= F.dropout(x, p=0.5, training=self.training)        
         x = self.sigmoid1(self.fc1(x))
@@ -93,7 +100,7 @@ class ConvNet(nn.Module):
 ### Instantiate the network
 model = ConvNet().to(device)
 ### Define the optimizer
-optimizer = optim.NAdam(model.parameters(),lr=learning_rate)
+optimizer = optim.Adam(model.parameters(),lr=learning_rate)
 ### Define the loss function
 criterion = nn.BCELoss()
 
