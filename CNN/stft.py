@@ -37,7 +37,7 @@ cutoff = 250
 nperseg = 350
 w = 'hann'
 i = 0
-mean_size = 5
+mean_size = 10
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
@@ -63,11 +63,11 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = np.abs(Zxx)
                             Zxx = ndimage.zoom(Zxx,10.0)
                             Zxx = Zxx/np.max(Zxx)
-                            
+                            # sets 0-8, 21,22,23,24,25,27 bad
                             'Transform to tensor'
                             tempdata = torch.tensor(Zxx)
                             tempdata = torch.unsqueeze(tempdata,0)
-                            if 21 <= sets <=23:
+                            if 12 <= sets <=14:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
@@ -102,7 +102,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                             os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
-                            if 12 <= sets <= 20 or 0 <= sets <= 8 or  24<= sets <= 47: 
+                            if 4 <= sets <= 5 or 15 <= sets <= 20  or  27 <= sets <= 47:  #0 <= sets <= 8 or 
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')

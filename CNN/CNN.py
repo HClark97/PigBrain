@@ -24,10 +24,10 @@ import numpy as np
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 10
-minibatch = 100
+batch_size = 32
+minibatch = 40
 epochs = 200
-learning_rate = 0.002
+learning_rate = 0.001
 patientswait = 10
 '''### Data ###'''
 def torch_loader(path):
@@ -52,10 +52,10 @@ val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 )
 
 val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
-ch1 = 64
-ch2 = 32
-ch3 = 8
-fc1in = 48
+ch1 = 8
+ch2 = 16
+ch3 = 16
+fc1in = 5152
 fciout = 10
 
 
@@ -64,12 +64,12 @@ fciout = 10
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=ch1, kernel_size=2, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=ch1, out_channels=ch2, kernel_size=2, padding=1)
-        self.conv3 = nn.Conv2d(in_channels=ch2, out_channels=ch3, kernel_size=2, padding=1)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=ch1, kernel_size=5, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=ch1, out_channels=ch2, kernel_size=5, padding=1)
+        self.conv3 = nn.Conv2d(in_channels=ch2, out_channels=ch3, kernel_size=5, padding=1)
         self.conv2_drop = nn.Dropout2d()
         #self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
-        self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
+        self.pool2 = nn.MaxPool2d(kernel_size=3,stride=2) #Den normale pooling vi havde fra starten
         self.fc1 = nn.Linear(in_features=fc1in, out_features=fciout)
         self.fc2 = nn.Linear(in_features=fciout, out_features=2)
         self.activation = torch.nn.Softmax(dim=1)
@@ -80,12 +80,12 @@ class ConvNet(nn.Module):
     def forward(self, x):
         x = self.pool2(self.leaky(self.conv1(x)))
         x = self.pool2(self.leaky(self.conv2_drop(self.conv2(x)))) 
-        x = self.pool2(self.leaky(self.conv3(x)))
+        x = self.pool2(self.leaky(self.conv2_drop(self.conv3(x))))
         #print(torch.Tensor.size(x))
         x = x.view(-1, fc1in)
         x= F.dropout(x, p=0.5, training=self.training)        
         x = self.sigmoid1(self.fc1(x))
-        #x = F.dropout(x, p=0.5, training=self.training)               
+        x = F.dropout(x, p=0.5, training=self.training)               
         x = self.sigmoid1(self.fc2(x))               
         x = self.activation(x)
         return x
@@ -148,12 +148,12 @@ for epoch in range(epochs):
             n_samples += labels.size(0) #how many samples has it gone through
             n_correct += (torch.round(prediction[:,0]) == labels[:,0]).sum().item() #how many are correct
                         ### Print Epoch, batch and loss
-            if i % minibatch == minibatch-1:  # print every 40 batches
-                print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
-                    epoch + 1, 
-                    i + 1, 
-                    len(val_loader), 
-                    val_loss / (i*batch_size))) #fix denne algoritme, den virker ikke korrekt
+            # if i % minibatch == minibatch-1:  # print every 40 batches
+            #     print('[Epoch: {} Batch: {}/{}] loss: {}'.format(
+            #         epoch + 1, 
+            #         i + 1, 
+            #         len(val_loader), 
+            #         val_loss / (i*batch_size))) #fix denne algoritme, den virker ikke korrekt
     ### Save loss in history        
     train_loss = train_loss/len(train_loader)
     train_loss_history.append(train_loss)
@@ -166,6 +166,7 @@ for epoch in range(epochs):
     if val_loss < val_best:
         #torch.save(model.state.dict(), filepath)
         val_best = val_loss
+        print('Val loss: '+ str(val_best))
         patience = 0
     
     ## Early stopping
