@@ -51,12 +51,12 @@ for group in range (len(groupname)): #2: nox and nonNox
                             'Get epoch'
                             #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
-                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size],axis =1) 
+                            stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size-1],axis =1) 
                             stim=(stim-np.mean(stim))/np.std(stim)
                             'Transform to tensor'
                             tempdata = torch.tensor(stim)
                             tempdata = torch.unsqueeze(tempdata,0)
-                            if 0 <= sets <=5:
+                            if 3 <= sets <=5:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
@@ -99,7 +99,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Katja Stougård\Documents\GitHub\Data\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
-                            if 12 <= sets <= 47: 
+                            if 12 <= sets <= 20 or  27 <= sets <= 47:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')
