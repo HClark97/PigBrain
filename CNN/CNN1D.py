@@ -6,19 +6,14 @@ Created on Mon Mar 21 10:54:19 2022
 """
 
 from torch.utils.data import DataLoader
-from torch.utils.data import Dataset
-from torch.utils.data import ConcatDataset
-from torchvision.transforms import ToTensor
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch
-import h5py
 import matplotlib.pyplot as plt
-import mpu
-import plyer as pl
 import torchvision
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -39,7 +34,7 @@ def torch_loader(path):
     sample = torch.load(path)
     return sample
 
-path = r'C:\Users\nicko\Desktop\STFT\Train'
+path = r'C:\Users\Katja Stougård\Documents\GitHub\Data\Train'
 train_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt'],
@@ -48,7 +43,7 @@ train_data = torchvision.datasets.DatasetFolder(root=path,
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
 
-path =r'C:\Users\nicko\Desktop\STFT\Test'
+path =r'C:\Users\Katja Stougård\Documents\GitHub\Data\Val'
 val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt']
@@ -176,7 +171,14 @@ for epoch in range(epochs):
         break
     patience += 1
 
-
+    # Writer will output to ./runs/ directory by default
+    writer = SummaryWriter()
+    
+    writer.add_scalar('Loss/train', train_loss, i)
+    
+    writer.add_scalar('Loss/val', val_loss,i)
+    
+    writer.close()
 
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
@@ -212,6 +214,10 @@ plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend()
 plt.show()
+
+
+
+
 
 #import os
 #os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
