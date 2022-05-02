@@ -135,6 +135,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                             i +=1 #counter til at gemme filer
                             j = j+mean_size #counter til gennemsnit af STFT
+            
             'Plot colormap'
             if plot:
                 plt.figure()
@@ -143,7 +144,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                 plt.xlabel('Time [sec]', fontweight='bold')
                 plt.ylabel('Frequency [Hz]', fontweight='bold')    
                 plt.colorbar()
-                plt.show()
+
+plt.show()
                             
                                  
 # torch.save(val_nox_data,'val_nox.pt')
