@@ -41,7 +41,7 @@ cutoff = 250
 nperseg = 350
 w = 'hann'
 i = 0
-mean_size = 5
+mean_size = 100
 zf = 2 #Zoom factor
 
 'Open up data'
@@ -83,7 +83,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\STFT\val\Nox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Documents\GitHub\STFT\val\Nox')    
-                                    torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
+                                    if save:
+                                        torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
                                 else:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\NonNox')
@@ -91,7 +92,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\STFT\val\Nonnox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Documents\GitHub\STFT\val\Nonnox')   
-                                    torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
+                                    if save:    
+                                        torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
                             if 9 <= sets <=11:
                                 if group == 1:
                                     if person == 'hjalte':
@@ -100,7 +102,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Test\Nox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Documents\GitHub\STFT\Test\Nox')
-                                    torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
+                                    if save:
+                                        torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
                                 else:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Test\NonNox')
@@ -108,8 +111,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Test\Nonnox')
                                     if person == 'nickolaj':
                                             os.chdir(r'C:\Users\nicko\Documents\GitHub\STFT\Test\Nonnox')
-
-                                    torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
+                                    if save:        
+                                        torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
                             if 36 <= sets <= 47 or 12 <= sets <= 14:#3 <= sets <= 5 or 12 <= sets <=20 or 27 <= sets <= 41:  #0 <= sets <= 8 or 
                                 if group == 1:
                                     if person == 'hjalte':
@@ -118,8 +121,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Train\Nox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Documents\GitHub\STFT\Train\Nox')
-                                    
-                                    torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
+                                    if save:
+                                        torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
                                 else:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\NonNox')
@@ -127,7 +130,8 @@ for group in range (len(groupname)): #2: nox and nonNox
                                         os.chdir(r'C:\Users\Mikkel\Desktop\STFT\Train\NonNox')
                                     if person == 'nickolaj':
                                         os.chdir(r'C:\Users\nicko\Documents\GitHub\STFT\Train\Nonnox')
-                                    torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
+                                    if save:
+                                        torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                             i +=1 #counter til at gemme filer
                             j = j+mean_size #counter til gennemsnit af STFT
