@@ -37,7 +37,7 @@ cutoff = 250
 nperseg = 350
 w = 'hann'
 i = 0
-mean_size = 5
+mean_size = 10
 'Open up data'
 for group in range (len(groupname)): #2: nox and nonNox
     for sets in range(len(data['NonnoxERP']['block'])): #48 
@@ -51,7 +51,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                         if np.size(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs']): #If there are stimulations 
     
                             'Get epoch'
-                            #stim = data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
+                            #stim=data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,epoch]
                             'get mean data'
                             stim=np.mean(data[groupname[group]]['block'][sets]['channel'][channel]['ERPs'][:,j:j+mean_size-1],axis =1) 
                             'Calculate STFT'
@@ -60,13 +60,13 @@ for group in range (len(groupname)): #2: nox and nonNox
                             Zxx = Zxx[0:cutindex,:] # Keep up til 500 Hz
                             f = f[0:cutindex]
                             Zxx = np.abs(Zxx)
-                            Zxx = ndimage.zoom(Zxx,10.0)
+                            Zxx = ndimage.zoom(Zxx,2.0)
                             Zxx = Zxx/np.max(Zxx)
                             # sets 0-2,6, 21:26 bad
                             'Transform to tensor'
                             tempdata = torch.tensor(Zxx)
                             tempdata = torch.unsqueeze(tempdata,0)
-                            if 33 <= sets <=35:
+                            if 3 <= sets <= 5:
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Val\Nox')
@@ -101,7 +101,7 @@ for group in range (len(groupname)): #2: nox and nonNox
                                             os.chdir(r'C:\Users\nicko\Desktop\STFT\Test\Nonnox')
 
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
-                            if 36 <= sets <= 47 or 12 <= sets <= 14:#3 <= sets <= 5 or 12 <= sets <=20 or 27 <= sets <= 41:  #0 <= sets <= 8 or 
+                            if  12 <= sets <= 47:# or 27 <= sets <= 30 or 42 <= sets <= 47:#3 <= sets <= 5 or 12 <= sets <=20 or 27 <= sets <= 41:  #0 <= sets <= 8 or 
                                 if group == 1:
                                     if person == 'hjalte':
                                         os.chdir(r'C:\Users\clark\Desktop\STFT\Train\Nox')

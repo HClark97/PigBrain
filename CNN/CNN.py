@@ -25,11 +25,7 @@ from torch.utils.tensorboard import SummaryWriter
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 64
-minibatch = 48
-epochs = 200
-learning_rate = 0.0002
-patientswait = 5
+
 '''### Data ###'''
 def torch_loader(path):
     sample = torch.load(path)
@@ -37,51 +33,51 @@ def torch_loader(path):
 
 # # Writer will output to ./runs/ directory by default
 writer = SummaryWriter()
-
-
+batch_size = 6
+minibatch = 250
+epochs = 200
+learning_rate = 0.0001
+patientswait = 30
+ch1 = 12
+ch2 = 8
+ch3 = 10
+#ch4 = 32
+#ch5 = 32
+fc1in = 96
+fciout = 10 
 #path = pl.filechooser.choose_dir()
 path = r'C:\Users\Mikkel\Desktop\STFT\train'
 train_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt'],
                                                 )
-
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
-
-
 #path = pl.filechooser.choose_dir()
-path = r'C:\Users\Mikkel\Desktop\STFT\val' 
+path = r'C:\Users\Mikkel\Desktop\STFT\test' 
 val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt']
                                                 )
 
 val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
-ch1 = 32
-ch2 = 64
-ch3 = 64
-#ch4 = 32
-#ch5 = 32
-fc1in = 128
-fciout = 10
-
 
 '''### Model definition ###'''
 ### Define architecture
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=ch1, kernel_size=5, padding=1,stride = 2) 
-        self.conv2 = nn.Conv2d(in_channels=ch1, out_channels=ch2, kernel_size=5, padding=1,stride = 2)
-        self.conv3 = nn.Conv2d(in_channels=ch2, out_channels=ch3, kernel_size=5, padding=1,stride = 2)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=ch1, kernel_size=3, padding=1) 
+        self.conv2 = nn.Conv2d(in_channels=ch1, out_channels=ch2, kernel_size=3, padding=1)
+        #self.conv3 = nn.Conv2d(in_channels=ch2, out_channels=ch3, kernel_size=2, padding=1)
         #self.conv4 = nn.Conv2d(in_channels=ch3, out_channels=ch4, kernel_size=5, padding=1)
         #self.conv5 = nn.Conv2d(in_channels=ch4, out_channels=ch5, kernel_size=5, padding=1)
 
         self.conv2_drop = nn.Dropout2d()
         #self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
-        self.pool2 = nn.MaxPool2d(kernel_size=3,stride=2) #Den normale pooling vi havde fra starten
+        self.pool2 = nn.MaxPool2d(kernel_size=3,stride=3) #Den normale pooling vi havde fra starten
         self.fc1 = nn.Linear(in_features=fc1in, out_features=fciout)
         self.fc2 = nn.Linear(in_features=fciout, out_features=2)
+
         self.activation = torch.nn.Softmax(dim=1)
         self.sigmoid1 = torch.nn.Sigmoid()
         self.leaky = torch.nn.LeakyReLU()
@@ -90,22 +86,22 @@ class ConvNet(nn.Module):
     def forward(self, x):
         x = self.pool2(self.leaky(self.conv1(x)))
         x = self.pool2(self.leaky(self.conv2_drop(self.conv2(x)))) 
-        #x = self.pool2(self.leaky(self.conv2_drop(self.conv3(x)))) 
+        #x = self.pool2(F.relu(self.conv2_drop(self.conv3(x)))) 
         #x = self.pool2(self.leaky(self.conv2_drop(self.conv4(x)))) 
-        x = self.pool2(self.leaky(self.conv3(x)))
-       # print(torch.Tensor.size(x))
+        #x = self.pool2(self.leaky(self.conv3(x)))
+        #print(torch.Tensor.size(x))
         x = x.view(-1, fc1in)
-        x= F.dropout(x, p=0.5, training=self.training)        
-        x = self.sigmoid1(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)               
-        x = self.sigmoid1(self.fc2(x))               
+        x= F.dropout(x, p=0.8, training=self.training)        
+        x = self.sigmoid1(self.fc1(x))    
+        x= F.dropout(x, p=0.8, training=self.training)           
+        x = self.sigmoid1(self.fc2(x))                            
         x = self.activation(x)
         return x
     
 ### Instantiate the network
 model = ConvNet().to(device)
 ### Define the optimizer
-optimizer = optim.Adam(model.parameters(),lr=learning_rate)
+optimizer = optim.NAdam(model.parameters(),lr=learning_rate)
 ### Define the loss function
 criterion = nn.BCELoss()
 
@@ -185,10 +181,17 @@ for epoch in range(epochs):
     if patience == patientswait:
         break
     patience += 1
+    '''### Plot test and validation model ###'''
+    plt.plot(train_loss_history, label='train')        
+    plt.plot(val_loss_history, label='validation')
+    plt.title('Loss model')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend()
+    plt.show()
 
-
-    writer.add_scalars('Loss', {'Training Loss': train_loss,'Validation Loss': val_loss,}, epoch)
-    writer.add_scalar('Validation Accuracy', acc,epoch)
+    #writer.add_scalars('Loss', {'Training Loss': train_loss,'Validation Loss': val_loss,}, epoch)
+    #writer.add_scalar('Validation Accuracy', acc,epoch)
 ### Save model
 # torch.save(model.state_dict(), FILEPATH)
 
