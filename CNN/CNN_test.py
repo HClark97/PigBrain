@@ -78,46 +78,47 @@ class ConvNet(nn.Module):
 
 
 '''### Testing model ###'''
-nb_classes = 2
-
-confusion_matrix = torch.zeros(nb_classes, nb_classes)
 
 model = ConvNet().to(device)
 model.load_state_dict(torch.load(r"C:\Users\clark\Desktop\STFT\model4.pth"))
 model.eval()
 n_correct = 0
 n_samples = 0
+y_true = []
+y_pred = []
 with torch.no_grad():
     for i, (imgs, labels) in enumerate(test_loader):
+        temp_label = labels.numpy()
+        y_true.extend(temp_label)
         labels = torch.tensor(np.eye(2)[np.asarray(labels)],dtype = torch.float32) #one hot encoding, so we got a 32,2 matrix (Alex said this is how it is done)
         imgs, labels = imgs.to(device), labels.to(device)
         outputs = model(imgs)
-        _, predicted = torch.max(outputs, 1)
+        prob, predicted = torch.max(outputs, 1)
+        temp_pred = labels*outputs
+        temp_pred,_ = torch.max(temp_pred,1)
+        temp_pred = temp_pred.numpy()
+        y_pred.extend(temp_pred)
         predicted = torch.tensor(np.eye(2)[np.asarray(predicted)],dtype = torch.float32)
         n_samples += labels.size(0)
-        for t, p in zip(labels.view(-1), predicted.view(-1)):
-            confusion_matrix[t.long(), p.long()] += 1
-
-print(confusion_matrix)
-accuracy = 100*(confusion_matrix[0,0] + confusion_matrix[1,1])/n_samples
+        n_correct += (torch.round(predicted[:,0]) == labels[:,0]).sum().item()
+        
+        
+accuracy = 100*n_correct/n_samples
 print(f'Accuracy of the network: {accuracy} %')
 
 
 # Calculate image-level ROC AUC score
-# y_true = n_correct
-# y_pred = n_samples
+fpr, tpr, _ = roc_curve(y_true, y_pred)
+roc_auc = roc_auc_score(y_true, y_pred)
 
-# fpr, tpr, _ = roc_curve(y_true, y_pred)
-# roc_auc = roc_auc_score(y_true, y_pred)
-
-# plt.figure(1)
-# lw = 2
-# plt.plot(fpr, tpr, color="darkorange", label="CNN (area = {:.3f})".format(roc_auc))
-# plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
-# plt.xlim([0.0, 1.0])
-# plt.ylim([0.0, 1.05])
-# plt.xlabel('False positive rate')
-# plt.ylabel('True positive rate')
-# plt.title('ROC curve')
-# plt.legend(loc="lower right")
-# plt.show()
+plt.figure(1)
+lw = 1
+plt.plot(fpr, tpr, color="darkorange", label="CNN (area = {:.3f})".format(roc_auc))
+plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False positive rate')
+plt.ylabel('True positive rate')
+plt.title('ROC curve')
+plt.legend(loc="lower right")
+plt.show()
