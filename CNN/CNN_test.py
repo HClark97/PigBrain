@@ -16,7 +16,7 @@ import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
 
 '''### Device configuration ###'''
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
 # 
 '''### Hyperparameters ###'''
 
@@ -93,8 +93,8 @@ with torch.no_grad():
         imgs, labels = imgs.to(device), labels.to(device)
         outputs = model(imgs)
         _, predicted = torch.max(outputs, 1)
+        predicted = torch.tensor(np.eye(2)[np.asarray(predicted)],dtype = torch.float32)
         n_samples += labels.size(0)
-        n_correct += (predicted == labels[:,1]).sum().item()
         for t, p in zip(labels.view(-1), predicted.view(-1)):
             confusion_matrix[t.long(), p.long()] += 1
 
