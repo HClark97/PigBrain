@@ -19,7 +19,7 @@ import mpu
 import plyer as pl
 import torchvision
 import numpy as np
-from torch.utils.tensorboard import SummaryWriter
+
 
 '''### Device configuration ###'''
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -32,7 +32,6 @@ def torch_loader(path):
     return sample
 
 # # Writer will output to ./runs/ directory by default
-writer = SummaryWriter()
 batch_size = 6
 minibatch = 250
 epochs = 200
@@ -41,19 +40,18 @@ patientswait = 30
 ch1 = 12
 ch2 = 8
 ch3 = 10
-#ch4 = 32
-#ch5 = 32
+
 fc1in = 96
 fciout = 10 
 #path = pl.filechooser.choose_dir()
-path = r'C:\Users\Mikkel\Desktop\STFT\train'
+path = r'C:\Users\clark\Desktop\STFT\train'
 train_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt'],
                                                 )
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 #path = pl.filechooser.choose_dir()
-path = r'C:\Users\Mikkel\Desktop\STFT\test' 
+path = r'C:\Users\clark\Desktop\STFT\test' 
 val_data = torchvision.datasets.DatasetFolder(root=path,
                                                 loader=torch_loader,
                                                 extensions=['.pt']
@@ -227,8 +225,6 @@ plt.xlabel('Epoch')
 plt.legend()
 plt.show()
 
-
-writer.close()
 
 #import os
 #os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
