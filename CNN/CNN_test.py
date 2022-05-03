@@ -94,8 +94,7 @@ with torch.no_grad():
         imgs, labels = imgs.to(device), labels.to(device)
         outputs = model(imgs)
         prob, predicted = torch.max(outputs, 1)
-        temp_pred = labels*outputs
-        temp_pred,_ = torch.max(temp_pred,1)
+        temp_pred = outputs[:,1]
         temp_pred = temp_pred.numpy()
         y_pred.extend(temp_pred)
         predicted = torch.tensor(np.eye(2)[np.asarray(predicted)],dtype = torch.float32)
@@ -108,7 +107,7 @@ print(f'Accuracy of the network: {accuracy} %')
 
 
 # Calculate image-level ROC AUC score
-fpr, tpr, _ = roc_curve(y_true, y_pred)
+fpr, tpr, threshold = roc_curve(y_true, y_pred)
 roc_auc = roc_auc_score(y_true, y_pred)
 
 plt.figure(1)
