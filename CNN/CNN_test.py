@@ -55,17 +55,14 @@ class ConvNet(nn.Module):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=0) 
         self.conv2 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=0)
-
         self.conv2_drop = nn.Dropout2d()
         self.pool1 = nn.MaxPool2d(kernel_size=3,stride = 3) #Sikre at vi har et lige antal efter første pooling
         self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
         self.fc1 = nn.Linear(in_features=120, out_features=30)
         self.fc2 = nn.Linear(in_features=30, out_features=2)
-
         self.activation = torch.nn.Softmax(dim=1)
         self.sigmoid1 = torch.nn.Sigmoid()
         self.leaky = torch.nn.LeakyReLU()
-        
         
     def forward(self, x):
         x = self.pool1(F.relu(self.conv1(x)))
@@ -81,6 +78,10 @@ class ConvNet(nn.Module):
 
 
 '''### Testing model ###'''
+nb_classes = 2
+
+confusion_matrix = torch.zeros(nb_classes, nb_classes)
+
 model = ConvNet().to(device)
 model.load_state_dict(torch.load(r"C:\Users\clark\Desktop\STFT\model4.pth"))
 model.eval()
@@ -93,14 +94,18 @@ with torch.no_grad():
         outputs = model(imgs)
         _, predicted = torch.max(outputs, 1)
         n_samples += labels.size(0)
-        n_correct += (predicted == labels[:,0]).sum().item()
-    accuracy = 100.0 * n_correct / n_samples
-    print(f'Accuracy of the network: {accuracy} %')
+        n_correct += (predicted == labels[:,1]).sum().item()
+        for t, p in zip(labels.view(-1), predicted.view(-1)):
+            confusion_matrix[t.long(), p.long()] += 1
+
+print(confusion_matrix)
+accuracy = 100*(confusion_matrix[0,0] + confusion_matrix[1,1])/n_samples
+print(f'Accuracy of the network: {accuracy} %')
 
 
 # Calculate image-level ROC AUC score
-# y_true = all_y_true
-# y_pred = all_y_pred
+# y_true = n_correct
+# y_pred = n_samples
 
 # fpr, tpr, _ = roc_curve(y_true, y_pred)
 # roc_auc = roc_auc_score(y_true, y_pred)
