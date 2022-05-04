@@ -19,10 +19,10 @@ import numpy as np
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # 
 '''### Hyperparameters ###'''
-batch_size = 64
+batch_size = 50
 minibatch = 100
-epochs = 2
-learning_rate = 0.002
+epochs = 500
+learning_rate = 0.0001
 
 '''### Data ###'''
 def torch_loader(path):
@@ -45,33 +45,44 @@ val_data = torchvision.datasets.DatasetFolder(root=path[0],
 
 val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
 
+filepathModel = r'/Users/amaliekoch/Desktop/STFT/models/model.pth'
 
 '''### Model definition ###'''
 ### Define architecture
 class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=4, out_channels=16, kernel_size=5, padding=1)
-        self.conv2_drop = nn.Dropout2d()
-        #self.pool1 = nn.MaxPool2d(kernel_size=2,stride = 1) #Sikre at vi har et lige antal efter første pooling
-        self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) #Den normale pooling vi havde fra starten
-        self.fc1 = nn.Linear(in_features=240, out_features=20)
-        self.fc2 = nn.Linear(in_features=20, out_features=2)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, stride = 1, padding=0)
+        self.conv2 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=0)
+        #self.conv3 = nn.Conv2d(in_channels=8, out_channels=12, kernel_size=2, padding=1)
+        #self.conv3 = nn.Conv2d(in_channels=16, out_channels=8, kernel_size=2, padding=1)
+        self.conv1_drop = nn.Dropout2d(0.5)
+        self.conv2_drop = nn.Dropout2d(0.5)
+        self.pool1 = nn.MaxPool2d(kernel_size=3,stride=3)
+        self.pool2 = nn.MaxPool2d(kernel_size=2,stride=2) 
+        self.fc1 = nn.Linear(in_features=120, out_features=30)
+        self.fc2 = nn.Linear(in_features=30, out_features=2)
+        #self.fc3 = nn.Linear(in_features=10, out_features=2)
         self.activation = torch.nn.Softmax(dim=1)
         self.sigmoid1 = torch.nn.Sigmoid()
         
         
     def forward(self, x):
-        x = self.pool2(F.relu(self.conv1(x))) 
-        x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 240)  
-        x= F.dropout(x, p=0.25, training=self.training)        
+        #x = self.pool1(F.relu(self.conv1(x)))
+        #x = self.pool2(F.relu(self.conv2(x)))
+        x = self.pool1(F.relu(self.conv1_drop(self.conv1(x)))) 
+        x = self.pool2(F.relu(self.conv2_drop(self.conv2(x))))
+        #x = self.pool2(F.relu(self.conv3(x)))
+        x = x.view(-1, 120)  
+        #x= F.dropout(x, p=0.3, training=self.training)        
         x = self.sigmoid1(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)               
-        x = self.sigmoid1(self.fc2(x))               
+        x = F.dropout(x, p=0.7, training=self.training)               
+        x = self.sigmoid1(self.fc2(x))
+        x = F.dropout(x, p=0.7, training=self.training)               
+        #x = self.sigmoid1(self.fc3(x))               
         x = self.activation(x)
         return x
+    
     
 ### Instantiate the network
 model = ConvNet().to(device)
@@ -147,19 +158,29 @@ for epoch in range(epochs):
           
     ## Model chechpoint
     if val_loss < val_best:
-        #torch.save(model.state.dict(), filepath)
         val_best = val_loss
         patience = 0
+        torch.save(model.state_dict(), filepathModel)
+        
     
     ## Early stopping
-    if patience == 5:
+    if patience == 100:
         break
     patience += 1
+    
+    '''### Plot test and validation model ###'''
+    plt.plot(train_loss_history, label='train')        
+    plt.plot(val_loss_history, label='validation')
+    plt.title('Loss model')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend()
+    plt.show()
 
 
 
 ### Save model
-# torch.save(model.state_dict(), FILEPATH)
+# torch.save(model.state_dict(), FILEPATH) # filepathModel = '/Users/amaliekoch/Desktop/STFT'
 
 
 
@@ -213,3 +234,7 @@ plt.show()
 #         n_correct += (predicted == labels).sum().item()
 #     accuracy = 100.0 * n_correct / n_samples
 #     print(f'Accuracy of the network: {accuracy} %')
+
+
+
+
