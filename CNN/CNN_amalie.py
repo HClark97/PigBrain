@@ -89,7 +89,7 @@ model = ConvNet().to(device)
 ### Define the optimizer
 optimizer = optim.NAdam(model.parameters(),lr=learning_rate)
 ### Define the loss function
-criterion = nn.BCELoss()
+criterion = nn.CELoss()
 
 '''### Training ###'''
 train_loss_history = list()

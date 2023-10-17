@@ -66,24 +66,24 @@ for group in range (len(groupname)): #2: nox and nonNox
                             tempdata = torch.unsqueeze(tempdata,0)
                             if 21 <= sets <=23 or 3 <= sets <=5: #final validation data
                                 if group == 1:
-                                    os.chdir(r'/Users/amaliekoch/Desktop/STFT/Val/Nox')
+                                    os.chdir(r'E:\EXAI data\STFT\Val\Nox')
                                     torch.save(tempdata,'val_nox_'+ str(i) +'.pt')
                                 else:
-                                    os.chdir(r'/Users/amaliekoch/Desktop/STFT/Val/NonNox')
+                                    os.chdir(r'E:\EXAI data\STFT\Val\NonNox')
                                     torch.save(tempdata,'val_nonnox_'+ str(i) +'.pt')
                             if 9 <= sets <=11 or 42 <= sets <=44: #final test data
                                 if group == 1:
-                                    os.chdir(r'/Users/amaliekoch/Desktop/STFT/Test/Nox')
+                                    os.chdir(r'E:\EXAI data\STFT\Test\Nox')
                                     torch.save(tempdata,'test_nox_'+ str(i) +'.pt')
                                 else:
-                                    os.chdir(r'/Users/amaliekoch/Desktop/STFT/Test/NonNox')
+                                    os.chdir(r'E:\EXAI data\STFT\Test\NonNox')
                                     torch.save(tempdata,'test_nonnox_'+ str(i) +'.pt')
                             if 12 <= sets <= 15 or 19 <= sets <= 20 or 24 <= sets <= 41 or 45 <= sets <= 46: #final train data
                                 if group == 1:
-                                    os.chdir(r'/Users/amaliekoch/Desktop/STFT/Train/Nox')
+                                    os.chdir(r'E:\EXAI data\STFT\Train\Nox')
                                     torch.save(tempdata,'train_nox_'+ str(i) +'.pt')
                                 else:
-                                    os.chdir(r'/Users/amaliekoch/Desktop/STFT/Train/NonNox')
+                                    os.chdir(r'E:\EXAI data\STFT\Train\NonNox')
                                     torch.save(tempdata,'train_nonnox_'+ str(i) +'.pt')
                             # stft_dic[groupname[group]]['block'][sets]['channel'][channel]['ERPs'].append(stft_tensor)
                             i +=1 #counter til at gemme filer
